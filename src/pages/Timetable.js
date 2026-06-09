@@ -1,45 +1,109 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCalendarAlt, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 const Timetable = () => {
-  return (
-    <div className="page-animate" style={{ padding: '3rem' }}>
-      <div className="timetable-card card p-4 shadow-sm rounded-4" style={{ background: '#f8fbff', border: '1px solid rgba(102, 126, 234, 0.12)' }}>
-        <div className="mb-4">
-          <h1 className="display-6 fw-bold">Timetable</h1>
-          <p className="text-muted">View and manage your school timetable with smooth transitions and clear daily planning.</p>
-        </div>
+  const [timetables, setTimetables] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-        <div className="table-responsive">
-          <table className="table align-middle">
-            <thead>
-              <tr>
-                <th>Time</th>
-                <th>Monday</th>
-                <th>Tuesday</th>
-                <th>Wednesday</th>
-                <th>Thursday</th>
-                <th>Friday</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                { time: '08:00 - 09:00', monday: 'Math', tuesday: 'Science', wednesday: 'English', thursday: 'History', friday: 'Art' },
-                { time: '09:15 - 10:15', monday: 'Art', tuesday: 'Math', wednesday: 'PE', thursday: 'Science', friday: 'Music' },
-                { time: '10:30 - 11:30', monday: 'English', tuesday: 'History', wednesday: 'Math', thursday: 'Computer', friday: 'Science' },
-              ].map((row) => (
-                <tr key={row.time} style={{ transition: 'transform 0.25s ease, opacity 0.25s ease' }}>
-                  <td className="fw-semibold">{row.time}</td>
-                  <td>{row.monday}</td>
-                  <td>{row.tuesday}</td>
-                  <td>{row.wednesday}</td>
-                  <td>{row.thursday}</td>
-                  <td>{row.friday}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+  useEffect(() => {
+    fetch('/api/timetables')
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to fetch timetables');
+        return res.json();
+      })
+      .then(data => {
+        setTimetables(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        setError(err.message);
+        setLoading(false);
+      });
+  }, []);
+
+  const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+  const periods = ['08:00 - 09:00', '09:15 - 10:15', '10:30 - 11:30', '11:45 - 12:45', '13:30 - 14:30'];
+
+  const getSubjectForDayAndPeriod = (day, time) => {
+    for (const tt of timetables) {
+      if (tt.periods) {
+        for (const period of tt.periods) {
+          if (period.day === day && period.time === time) {
+            return period.subject?.name || 'Subject';
+          }
+        }
+      }
+    }
+    return null;
+  };
+
+  return (
+    <div className="container py-5">
+      <div className="mb-4">
+        <h1 className="display-5 fw-bold">
+          <FontAwesomeIcon icon={faCalendarAlt} className="me-2 text-primary" />
+          Timetable
+        </h1>
+        <p className="lead text-muted">View and manage school timetable.</p>
       </div>
+
+      {loading && (
+        <div className="text-center py-5">
+          <FontAwesomeIcon icon={faSpinner} spin size="3x" className="text-primary mb-3" />
+          <p className="text-muted">Loading timetable...</p>
+        </div>
+      )}
+
+      {error && (
+        <div className="alert alert-danger">{error}</div>
+      )}
+
+      {!loading && !error && (
+        <div className="card border-0 shadow-sm rounded-4 overflow-hidden">
+          <div className="table-responsive">
+            <table className="table table-bordered mb-0">
+              <thead className="bg-light">
+                <tr>
+                  <th className="ps-4" style={{ minWidth: '130px' }}>Time</th>
+                  {days.map(day => (
+                    <th key={day} className="text-center fw-bold">{day}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {periods.map(time => (
+                  <tr key={time}>
+                    <td className="ps-4 fw-semibold text-nowrap">{time}</td>
+                    {days.map(day => {
+                      const subject = getSubjectForDayAndPeriod(day, time);
+                      return (
+                        <td key={day} className="text-center" style={{ height: '60px', verticalAlign: 'middle' }}>
+                          {subject ? (
+                            <span className="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-2">
+                              {subject}
+                            </span>
+                          ) : (
+                            <span className="text-muted" style={{ fontSize: '0.85rem' }}>—</span>
+                          )}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="p-3 bg-light border-top">
+            <small className="text-muted">
+              {timetables.length > 0 
+                ? `${timetables.length} timetable(s) loaded from database. Use the backend API to manage timetables.`
+                : 'No timetables found. Create one using the API at /api/timetables.'}
+            </small>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

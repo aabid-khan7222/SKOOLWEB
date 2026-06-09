@@ -1,841 +1,2707 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+
 import { Link } from 'react-router-dom';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar, faCheck, faUsers, faBookOpen, faClipboardList, faChartLine, faCalendarAlt, faBullhorn, faArrowRight, faClock, faTrophy, faLightbulb, faDesktop, faEnvelope, faPhone, faPlay, faRocket, faShieldAlt, faGlobe } from '@fortawesome/free-solid-svg-icons';
-import { faTwitter, faLinkedin, faFacebook } from '@fortawesome/free-brands-svg-icons';
+
+import { faStar, faCheck, faCheckCircle, faUsers, faBookOpen, faClipboardList, faChartLine, faCalendarAlt, faBullhorn, faBell, faArrowRight, faClock, faTrophy, faLightbulb, faDesktop, faEnvelope, faPhone, faPlay, faRocket, faShieldAlt, faGlobe, faChevronDown, faChevronUp, faAward, faGraduationCap, faChalkboardTeacher, faSchool, faFileAlt, faMoneyBillWave, faCog, faMobileAlt, faCloud, faLock, faHeadset, faHandshake, faMagic, faZap, faSync, faChartPie, faUserFriends, faLaptopCode, faPalette, faLayerGroup, faThumbsUp, faQuoteLeft, faChevronRight, faCircle, faDotCircle } from '@fortawesome/free-solid-svg-icons';
+
+import { faTwitter, faLinkedin, faFacebook, faInstagram, faYoutube, faGithub, faDribbble, faSlack } from '@fortawesome/free-brands-svg-icons';
+
+
 
 const LandingPage = () => {
+
   const [isVisible, setIsVisible] = useState(false);
+
   const [scrollY, setScrollY] = useState(0);
 
+  const [activeSection, setActiveSection] = useState('home');
+
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+ 
+
+  // फीचर्स को इन-प्लेस पॉपअप में दिखाने के लिए स्टेट
+
+  const [expandedPlans, setExpandedPlans] = useState({});
+
+
+
+  const heroRef = useRef(null);
+
+  const featuresRef = useRef(null);
+
+  const statsRef = useRef(null);
+
+
+
+  const toggleFeatures = (index) => {
+
+    setExpandedPlans(prev => ({
+
+      ...prev,
+
+      [index]: !prev[index]
+
+    }));
+
+  };
+
+
+
   useEffect(() => {
+
     setIsVisible(true);
 
+
+
     const handleScroll = () => {
+
       setScrollY(window.scrollY);
+
+     
+
+      // Update active section based on scroll position
+
+      const sections = ['home', 'features', 'pricing', 'testimonials', 'contact'];
+
+      for (const section of sections) {
+
+        const element = document.getElementById(section);
+
+        if (element) {
+
+          const rect = element.getBoundingClientRect();
+
+          if (rect.top <= 100 && rect.bottom >= 100) {
+
+            setActiveSection(section);
+
+            break;
+
+          }
+
+        }
+
+      }
+
     };
 
+
+
+    const handleMouseMove = (e) => {
+
+      setMousePosition({ x: e.clientX, y: e.clientY });
+
+    };
+
+
+
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+
+    window.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+
+      window.removeEventListener('scroll', handleScroll);
+
+      window.removeEventListener('mousemove', handleMouseMove);
+
+    };
+
   }, []);
 
+
+
+  // Intersection Observer for scroll animations
+
+  useEffect(() => {
+
+    const observerOptions = {
+
+      threshold: 0.1,
+
+      rootMargin: '0px 0px -50px 0px'
+
+    };
+
+
+
+    const observer = new IntersectionObserver((entries) => {
+
+      entries.forEach(entry => {
+
+        if (entry.isIntersecting) {
+
+          entry.target.classList.add('animate-in');
+
+        }
+
+      });
+
+    }, observerOptions);
+
+
+
+    document.querySelectorAll('.scroll-animate').forEach(el => observer.observe(el));
+
+
+
+    return () => observer.disconnect();
+
+  }, []);
+
+
+
   return (
-    <div style={{ overflowX: 'hidden' }}>
+
+    <div style={{ overflowX: 'hidden', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
+
+      {/* Custom CSS for advanced animations */}
+
+      <style>{`
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+       
+
+        * {
+
+          margin: 0;
+
+          padding: 0;
+
+          box-sizing: border-box;
+
+        }
+
+
+
+        html {
+
+          scroll-behavior: smooth;
+
+        }
+
+
+
+        body {
+
+          font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+          line-height: 1.6;
+
+          color: #1a1a2e;
+
+          background-color: #ffffff;
+
+          overflow-x: hidden;
+
+        }
+
+
+
+        /* Custom Scrollbar for Features Popup Box */
+
+        .features-scrollbar::-webkit-scrollbar {
+
+          width: 6px;
+
+        }
+
+        .features-scrollbar::-webkit-scrollbar-track {
+
+          background: #f1f1f1;
+
+          border-radius: 10px;
+
+        }
+
+        .features-scrollbar::-webkit-scrollbar-thumb {
+
+          background: #667eea;
+
+          border-radius: 10px;
+
+        }
+
+        .features-scrollbar::-webkit-scrollbar-thumb:hover {
+
+          background: #764ba2;
+
+        }
+
+
+
+        /* Advanced Gradient Animations */
+
+        @keyframes gradientShift {
+
+          0% { background-position: 0% 50%; }
+
+          50% { background-position: 100% 50%; }
+
+          100% { background-position: 0% 50%; }
+
+        }
+
+
+
+        @keyframes float3D {
+
+          0%, 100% { transform: translateY(0px) rotateX(0deg) rotateY(0deg); }
+
+          25% { transform: translateY(-10px) rotateX(2deg) rotateY(2deg); }
+
+          50% { transform: translateY(-5px) rotateX(0deg) rotateY(-2deg); }
+
+          75% { transform: translateY(-15px) rotateX(-2deg) rotateY(1deg); }
+
+        }
+
+
+
+        @keyframes morphing {
+
+          0% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+
+          50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+
+          100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+
+        }
+
+
+
+        @keyframes shimmer {
+
+          0% { transform: translateX(-100%); }
+
+          100% { transform: translateX(100%); }
+
+        }
+
+
+
+        @keyframes glow {
+
+          0%, 100% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.3); }
+
+          50% { box-shadow: 0 0 40px rgba(99, 102, 241, 0.6), 0 0 60px rgba(139, 92, 246, 0.4); }
+
+        }
+
+
+
+        @keyframes slideUpFade {
+
+          from { opacity: 0; transform: translateY(60px) scale(0.95); }
+
+          to { opacity: 1; transform: translateY(0) scale(1); }
+
+        }
+
+
+
+        @keyframes slideInFromLeft {
+
+          from { opacity: 0; transform: translateX(-80px) rotate(-5deg); }
+
+          to { opacity: 1; transform: translateX(0) rotate(0); }
+
+        }
+
+
+
+        @keyframes slideInFromRight {
+
+          from { opacity: 0; transform: translateX(80px) rotate(5deg); }
+
+          to { opacity: 1; transform: translateX(0) rotate(0); }
+
+        }
+
+
+
+        @keyframes pulse2 {
+
+          0%, 100% { transform: scale(1); opacity: 1; }
+
+          50% { transform: scale(1.05); opacity: 0.8; }
+
+        }
+
+
+
+        @keyframes numberCount {
+
+          from { opacity: 0; transform: translateY(20px); }
+
+          to { opacity: 1; transform: translateY(0); }
+
+        }
+
+
+
+        .scroll-animate {
+
+          opacity: 0;
+
+          transform: translateY(40px);
+
+          transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+
+        }
+
+
+
+        .scroll-animate.animate-in {
+
+          opacity: 1;
+
+          transform: translateY(0);
+
+        }
+
+
+
+        .glass-effect {
+
+          background: rgba(255, 255, 255, 0.7);
+
+          backdrop-filter: blur(20px);
+
+          -webkit-backdrop-filter: blur(20px);
+
+          border: 1px solid rgba(255, 255, 255, 0.3);
+
+        }
+
+
+
+        .gradient-text-pro {
+
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+
+          background-size: 200% auto;
+
+          -webkit-background-clip: text;
+
+          -webkit-text-fill-color: transparent;
+
+          background-clip: text;
+
+          animation: gradientShift 3s ease infinite;
+
+        }
+
+
+
+        .btn-pro {
+
+          position: relative;
+
+          overflow: hidden;
+
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+          border: none;
+
+          font-weight: 600;
+
+        }
+
+
+
+        .btn-pro::before {
+
+          content: '';
+
+          position: absolute;
+
+          top: 0;
+
+          left: -100%;
+
+          width: 100%;
+
+          height: 100%;
+
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+
+          transition: left 0.6s;
+
+        }
+
+
+
+        .btn-pro:hover::before {
+
+          left: 100%;
+
+        }
+
+
+
+        .btn-pro:hover {
+
+          transform: translateY(-3px) scale(1.02);
+
+          box-shadow: 0 20px 40px rgba(99, 102, 241, 0.4);
+
+        }
+
+
+
+        .card-pro {
+
+          background: white;
+
+          border-radius: 24px;
+
+          padding: 32px;
+
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+
+          transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+
+          position: relative;
+
+          overflow: hidden;
+
+        }
+
+
+
+        .card-pro::before {
+
+          content: '';
+
+          position: absolute;
+
+          top: 0;
+
+          left: 0;
+
+          right: 0;
+
+          height: 4px;
+
+          background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+
+          transform: scaleX(0);
+
+          transition: transform 0.5s ease;
+
+        }
+
+
+
+        .card-pro:hover::before {
+
+          transform: scaleX(1);
+
+        }
+
+
+
+        .card-pro:hover {
+
+          transform: translateY(-12px) scale(1.02);
+
+          box-shadow: 0 30px 60px rgba(99, 102, 241, 0.2);
+
+        }
+
+
+
+        .floating-element {
+
+          animation: float3D 6s ease-in-out infinite;
+
+        }
+
+
+
+        .glow-effect {
+
+          animation: glow 2s ease-in-out infinite;
+
+        }
+
+
+
+        /* Mesh Gradient Background */
+
+        .mesh-gradient {
+
+          background:
+
+            radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+
+            radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.15) 0px, transparent 50%),
+
+            radial-gradient(at 100% 100%, rgba(240, 147, 251, 0.15) 0px, transparent 50%),
+
+            radial-gradient(at 0% 100%, rgba(99, 102, 241, 0.15) 0px, transparent 50%);
+
+        }
+
+
+
+        /* Noise texture overlay */
+
+        .noise-overlay {
+
+          position: fixed;
+
+          top: 0;
+
+          left: 0;
+
+          width: 100%;
+
+          height: 100%;
+
+          pointer-events: none;
+
+          opacity: 0.03;
+
+          z-index: 9999;
+
+          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+
+        }
+
+      `}</style>
+
+
+
+      {/* Noise Texture Overlay */}
+
+      <div className="noise-overlay"></div>
+
+
+
       {/* Header */}
-      <header className={`navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top shadow-sm navbar-realistic ${scrollY > 50 ? 'scrolled' : ''}`}>
+
+      <header className={`sticky-top transition-all ${scrollY > 50 ? 'scrolled' : ''}`} style={{
+
+        background: scrollY > 50 ? 'rgba(255, 255, 255, 0.95)' : 'transparent',
+
+        backdropFilter: scrollY > 50 ? 'blur(20px)' : 'none',
+
+        borderBottom: scrollY > 50 ? '1px solid rgba(99, 102, 241, 0.1)' : 'none',
+
+        boxShadow: scrollY > 50 ? '0 10px 30px rgba(0, 0, 0, 0.1)' : 'none',
+
+        transition: 'all 0.3s ease',
+
+        zIndex: 1000
+
+      }}>
+
         <div className="container">
-          <Link className="navbar-brand fw-bold d-flex align-items-center interactive-element" to="/">
-            <div style={{
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              width: '40px',
-              height: '40px',
-              borderRadius: '10px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'white',
-              marginRight: '10px',
-              fontSize: '20px',
-              animation: 'bounceIn 1s ease-out'
-            }}>SK</div>
-            <span className="gradient-text">SKOOLWEB</span>
-          </Link>
-          <button className="navbar-toggler interactive-element" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="collapse navbar-collapse" id="navbarNav">
-            <ul className="navbar-nav ms-auto align-items-center">
-              <li className="nav-item"><a className="nav-link interactive-element" href="#home">Home</a></li>
-              <li className="nav-item"><a className="nav-link interactive-element" href="#features">Features</a></li>
-              <li className="nav-item"><a className="nav-link interactive-element" href="#pricing">Pricing</a></li>
-              <li className="nav-item"><Link className="nav-link interactive-element" to="/contact">Contact</Link></li>
-              <li className="nav-item"><Link className="btn btn-realistic btn-primary ms-3" to="/contact">Request Demo</Link></li>
-            </ul>
-          </div>
+
+          <nav className="navbar navbar-expand-lg">
+
+            <Link className="navbar-brand fw-bold d-flex align-items-center" to="/">
+
+              <div style={{
+
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+
+                width: '48px',
+
+                height: '48px',
+
+                borderRadius: '16px',
+
+                display: 'flex',
+
+                alignItems: 'center',
+
+                justifyContent: 'center',
+
+                color: 'white',
+
+                marginRight: '12px',
+
+                fontSize: '22px',
+
+                fontWeight: '900',
+
+                boxShadow: '0 8px 20px rgba(99, 102, 241, 0.3)',
+
+                animation: 'pulse2 2s infinite'
+
+              }}>SK</div>
+
+              <span className="gradient-text-pro" style={{ fontSize: '1.5rem', fontWeight: '900' }}>SKOOLWEB</span>
+
+            </Link>
+
+           
+
+            <button className="navbar-toggler" type="button" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+
+              <span className="navbar-toggler-icon"></span>
+
+            </button>
+
+           
+
+            <div className={`collapse navbar-collapse ${isMenuOpen ? 'show' : ''}`} id="navbarNav">
+
+              <ul className="navbar-nav ms-auto align-items-center">
+
+                {['Home', 'Features', 'Pricing', 'Testimonials'].map((item) => (
+
+                  <li className="nav-item" key={item}>
+
+                    <a
+
+                      className={`nav-link fw-500 px-3 ${activeSection === item.toLowerCase() ? 'active text-primary' : ''}`}
+
+                      href={`#${item.toLowerCase()}`}
+
+                      style={{
+
+                        position: 'relative',
+
+                        transition: 'all 0.3s ease',
+
+                        color: activeSection === item.toLowerCase() ? '#667eea' : '#64748b'
+
+                      }}
+
+                    >
+
+                      {item}
+
+                      {activeSection === item.toLowerCase() && (
+
+                        <span style={{
+
+                          position: 'absolute',
+
+                          bottom: '-2px',
+
+                          left: '50%',
+
+                          transform: 'translateX(-50%)',
+
+                          width: '20px',
+
+                          height: '3px',
+
+                          background: 'linear-gradient(90deg, #667eea, #764ba2)',
+
+                          borderRadius: '2px'
+
+                        }}></span>
+
+                      )}
+
+                    </a>
+
+                  </li>
+
+                ))}
+
+                <li className="nav-item">
+
+                  <Link to="/contact" className="nav-link fw-500 px-3" style={{ color: '#64748b' }}>Contact</Link>
+
+                </li>
+
+                <li className="nav-item ms-2">
+
+                  <Link to="/contact" className="btn btn-pro btn-primary px-4 py-2 rounded-pill" style={{
+
+                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+
+                    border: 'none',
+
+                    color: 'white',
+
+                    fontWeight: '600',
+
+                    padding: '12px 28px',
+
+                    borderRadius: '50px',
+
+                    boxShadow: '0 10px 30px rgba(99, 102, 241, 0.3)'
+
+                  }}>
+
+                    <FontAwesomeIcon icon={faRocket} className="me-2" />
+
+                    Request Demo
+
+                  </Link>
+
+                </li>
+
+              </ul>
+
+            </div>
+
+          </nav>
+
         </div>
+
       </header>
 
-      {/* Hero Section */}
-      <section id="home" className={`py-5 ${isVisible ? 'animate-fade-up' : ''}`} style={{
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        color: 'white',
-        paddingTop: '120px',
-        paddingBottom: '120px',
-        position: 'relative',
-        overflow: 'hidden',
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center'
-      }}>
-        {/* Floating Shapes */}
-        <div className="floating-shape"></div>
-        <div className="floating-shape"></div>
-        <div className="floating-shape"></div>
 
-        {/* Background Pattern */}
-        <div style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          opacity: 0.1
+
+      {/* Hero Section */}
+
+      <section
+
+  id="home"
+
+  ref={heroRef}
+
+  className="position-relative"
+
+  style={{
+
+    background: 'radial-gradient(circle at 75% 30%, #26245e 0%, #171736 60%, #111126 100%)',
+
+    minHeight: '100vh',
+
+    paddingTop: '120px',
+
+    paddingBottom: '80px',
+
+    overflow: 'hidden',
+
+    position: 'relative'
+
+  }}
+
+>
+
+        {/* Animated Background Elements */}
+
+        <div className="position-absolute" style={{
+
+          top: '10%',
+
+          left: '5%',
+
+          width: '200px',
+
+          height: '200px',
+
+          background: 'rgba(255, 255, 255, 0.1)',
+
+          borderRadius: '50%',
+
+          filter: 'blur(40px)',
+
+          animation: 'float3D 8s ease-in-out infinite'
+
         }}></div>
 
-        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-          <div className="row align-items-center">
-            <div className={`col-lg-6 ${isVisible ? 'animate-fade-right stagger-1' : ''}`}>
+        <div className="position-absolute" style={{
+
+          bottom: '20%',
+
+          right: '10%',
+
+          width: '300px',
+
+          height: '300px',
+
+          background: 'rgba(240, 147, 251, 0.15)',
+
+          borderRadius: '50%',
+
+          filter: 'blur(60px)',
+
+          animation: 'float3D 10s ease-in-out infinite reverse'
+
+        }}></div>
+
+
+
+        {/* Grid Pattern */}
+
+        <div style={{
+
+          position: 'absolute',
+
+          top: 0,
+
+          left: 0,
+
+          right: 0,
+
+          bottom: 0,
+
+          backgroundImage: `linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)`,
+
+          backgroundSize: '50px 50px',
+
+          opacity: 0.5
+
+        }}></div>
+
+
+
+        <div className="container position-relative" style={{ zIndex: 2 }}>
+
+          <div className="row align-items-center min-vh-75">
+
+            <div className={`col-lg-6 ${isVisible ? 'animate-in' : ''}`} style={{
+
+              animation: 'slideInFromLeft 1s ease-out',
+
+              animationFillMode: 'both'
+
+            }}>
+
               <div className="mb-4">
-                <span style={{
-                  background: 'rgba(255,255,255,0.2)',
-                  color: 'white',
-                  padding: '8px 16px',
-                  borderRadius: '25px',
-                  display: 'inline-block',
-                  fontSize: '14px',
-                  fontWeight: '600',
-                  marginBottom: '20px',
+
+                <span className="badge rounded-pill px-4 py-2" style={{
+
+                  background: 'rgba(255, 255, 255, 0.2)',
+
                   backdropFilter: 'blur(10px)',
-                  border: '1px solid rgba(255,255,255,0.1)'
+
+                  border: '1px solid rgba(255, 255, 255, 0.3)',
+
+                  color: 'white',
+
+                  fontSize: '14px',
+
+                  fontWeight: '600',
+
+                  letterSpacing: '0.5px'
+
                 }}>
-                  <FontAwesomeIcon icon={faRocket} className="me-2" />
-                  Next-Generation School Management
+
+                  <FontAwesomeIcon icon={faZap} className="me-2" />
+
+                  AI-Powered School Management Platform
+
                 </span>
+
               </div>
-              <h1 className="hero-heading mb-4" style={{ fontSize: '3.5rem' }}>
-                Transform Your School with
-                <span className="hero-heading-highlight d-block">SKOOLWEB</span>
+
+             
+
+              <h1 className="display-3 fw-black mb-4" style={{
+
+                fontSize: 'clamp(2.5rem, 5vw, 4.5rem)',
+
+                lineHeight: 1.1,
+
+                color: 'white',
+
+                textShadow: '0 4px 20px rgba(0, 0, 0, 0.2)'
+
+              }}>
+
+                Revolutionize Your<br />
+
+                <span style={{
+
+                  background: 'linear-gradient(90deg, #fff, rgba(255,255,255,0.8))',
+
+                  WebkitBackgroundClip: 'text',
+
+                  WebkitTextFillColor: 'transparent'
+
+                }}>Educational Institution</span>
+
               </h1>
-              <p className="hero-copy mb-4">
-                Streamline administrative tasks, enhance parent-teacher communication, and create a digital learning environment that drives student success. Join 500+ schools already revolutionizing education.
+
+             
+
+              <p className="lead mb-5" style={{
+
+                fontSize: '1.25rem',
+
+                color: 'rgba(255, 255, 255, 0.9)',
+
+                lineHeight: 1.8,
+
+                maxWidth: '600px',
+
+                textShadow: '0 2px 10px rgba(0, 0, 0, 0.1)'
+
+              }}>
+
+                Empower educators, engage parents, and inspire students with the most advanced school management system. Join 500+ forward-thinking schools transforming education today.
+
               </p>
+
+             
+
               <div className="d-flex flex-wrap gap-3 mb-5">
-                <Link to="/contact" className="btn btn-realistic btn-light btn-lg fw-bold px-4 py-3">
+
+                <Link to="/contact" className="btn btn-pro btn-light btn-lg px-5 py-3 rounded-pill" style={{
+
+                  background: 'white',
+
+                  color: '#667eea',
+
+                  fontWeight: '700',
+
+                  fontSize: '1.1rem',
+
+                  padding: '16px 36px',
+
+                  boxShadow: '0 20px 40px rgba(0, 0, 0, 0.2)',
+
+                  border: 'none'
+
+                }}>
+
                   <FontAwesomeIcon icon={faPlay} className="me-2" />
+
                   Start Free Trial
+
                 </Link>
-                <a href="#features" className="btn btn-outline-light btn-lg fw-bold px-4 py-3 interactive-element">
-                  <FontAwesomeIcon icon={faArrowRight} className="me-2" />
+
+                <a href="#features" className="btn btn-pro btn-outline-light btn-lg px-5 py-3 rounded-pill" style={{
+
+                  borderWidth: '2px',
+
+                  fontWeight: '600',
+
+                  fontSize: '1.1rem',
+
+                  padding: '16px 36px',
+
+                  backdropFilter: 'blur(10px)',
+
+                  background: 'rgba(255,255,255,0.1)'
+
+                }}>
+
+                  <FontAwesomeIcon icon={faChevronDown} className="me-2" />
+
                   Explore Features
+
                 </a>
+
               </div>
+
+
 
               {/* Trust Indicators */}
-              <div className="trust-banner card-realistic p-4 mt-4">
-                <div className="d-flex flex-column flex-sm-row align-items-center justify-content-between gap-4">
-                  <div className="d-flex flex-wrap gap-3 align-items-center">
-                    <div className="trust-stat text-start">
-                      <div className="trust-value">500+</div>
-                      <div className="trust-label">Schools Trust Us</div>
-                    </div>
-                    <div className="trust-stat text-start">
-                      <div className="trust-value">50K+</div>
-                      <div className="trust-label">Active Users</div>
-                    </div>
-                    <div className="trust-stat text-start">
-                      <div className="trust-value">4.9★</div>
-                      <div className="trust-label">Average Rating</div>
-                    </div>
-                  </div>
-                  <div className="trust-note">
-                    <div className="d-flex me-2">
-                      {[...Array(5)].map((_, i) => (
-                        <FontAwesomeIcon key={i} icon={faStar} className="text-warning me-1" style={{ fontSize: '14px' }} />
+
+              <div className="glass-effect rounded-4 p-4" style={{
+
+                backdropFilter: 'blur(20px)',
+
+                border: '1px solid rgba(255,255,255,0.2)',
+
+                background: 'rgba(255,255,255,0.1)'
+
+              }}>
+
+                <div className="row align-items-center">
+
+                  <div className="col-md-8">
+
+                    <div className="d-flex flex-wrap gap-4">
+
+                      {[
+
+                        { value: '500+', label: 'Schools Worldwide' },
+
+                        { value: '50K+', label: 'Active Users' },
+
+                        { value: '99.9%', label: 'Uptime Guarantee' }
+
+                      ].map((stat, idx) => (
+
+                        <div key={idx} className="text-center text-md-start">
+
+                          <div className="fw-black" style={{ fontSize: '2rem', color: 'white' }}>{stat.value}</div>
+
+                          <div className="small" style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.9rem' }}>{stat.label}</div>
+
+                        </div>
+
                       ))}
+
                     </div>
-                    <span>Trusted by educators worldwide</span>
+
                   </div>
+
+                  <div className="col-md-4 text-center text-md-end mt-3 mt-md-0">
+
+                    <div className="d-flex justify-content-center justify-content-md-end mb-2">
+
+                      {[...Array(5)].map((_, i) => (
+
+                        <FontAwesomeIcon key={i} icon={faStar} className="text-warning me-1" style={{ fontSize: '18px' }} />
+
+                      ))}
+
+                    </div>
+
+                    <div className="small" style={{ color: 'rgba(255,255,255,0.9)', fontWeight: '600' }}>
+
+                      4.9/5 User Rating
+
+                    </div>
+
+                  </div>
+
                 </div>
+
               </div>
+
             </div>
 
-            <div className={`col-lg-6 ${isVisible ? 'animate-fade-left stagger-2' : ''}`}>
-              <div className="position-relative">
-                {/* Main Dashboard Preview */}
-                <div style={{
-                  background: 'rgba(255,255,255,0.95)',
-                  borderRadius: '24px',
-                  padding: '40px',
-                  boxShadow: '0 25px 80px rgba(0, 0, 0, 0.15)',
+
+
+            <div className={`col-lg-6 ${isVisible ? 'animate-in' : ''}`} style={{
+
+              animation: 'slideInFromRight 1s ease-out',
+
+              animationFillMode: 'both',
+
+              animationDelay: '0.2s'
+
+            }}>
+
+              <div className="position-relative floating-element">
+
+                {/* Main Dashboard Mockup */}
+
+                <div className="card-pro" style={{
+
+                  background: 'rgba(255, 255, 255, 0.95)',
+
                   backdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(255,255,255,0.2)',
-                  position: 'relative',
+
+                  border: '1px solid rgba(255, 255, 255, 0.5)',
+
+                  boxShadow: '0 40px 80px rgba(0, 0, 0, 0.2)',
+
+                  borderRadius: '24px',
+
                   overflow: 'hidden'
+
                 }}>
+
                   {/* Browser Header */}
+
                   <div style={{
-                    background: '#f8f9fa',
-                    borderRadius: '12px 12px 0 0',
-                    padding: '12px 20px',
-                    borderBottom: '1px solid #e9ecef',
+
+                    background: 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)',
+
+                    padding: '16px 20px',
+
                     display: 'flex',
+
                     alignItems: 'center',
+
                     gap: '8px'
+
                   }}>
-                    <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#ff5f57' }}></div>
-                    <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#ffbd2e' }}></div>
-                    <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#28ca42' }}></div>
-                    <div style={{ flex: 1, textAlign: 'center', fontSize: '12px', color: '#6c757d' }}>
-                      skoolweb.com/dashboard
+
+                    <div style={{ display: 'flex', gap: '8px' }}>
+
+                      <div style={{ width: '14px', height: '14px', borderRadius: '50%', background: '#ff5f57' }}></div>
+
+                      <div style={{ width: '14px', height: '14px', borderRadius: '50%', background: '#ffbd2e' }}></div>
+
+                      <div style={{ width: '14px', height: '14px', borderRadius: '50%', background: '#28ca42' }}></div>
+
                     </div>
+
+                    <div style={{
+
+                      flex: 1,
+
+                      background: 'white',
+
+                      borderRadius: '8px',
+
+                      padding: '6px 12px',
+
+                      textAlign: 'center',
+
+                      fontSize: '12px',
+
+                      color: '#6c757d',
+
+                      marginLeft: '12px'
+
+                    }}>
+
+                      skoolweb.com/dashboard
+
+                    </div>
+
                   </div>
+
+
 
                   {/* Dashboard Content */}
-                  <div style={{
-                    padding: '30px',
-                    background: 'linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%)',
-                    borderRadius: '0 0 12px 12px'
-                  }}>
-                    <div className="row g-3">
+
+                  <div style={{ padding: '30px', background: 'linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%)' }}>
+
+                    <div className="row g-3 mb-4">
+
                       <div className="col-6">
-                        <div className="card-realistic p-3 mb-3">
+
+                        <div className="p-3 rounded-3" style={{
+
+                          background: 'white',
+
+                          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+
+                          border: '1px solid rgba(99, 102, 241, 0.1)'
+
+                        }}>
+
                           <div className="d-flex align-items-center">
+
                             <div style={{
-                              width: '40px',
-                              height: '40px',
-                              borderRadius: '10px',
+
+                              width: '48px',
+
+                              height: '48px',
+
+                              borderRadius: '14px',
+
                               background: 'linear-gradient(135deg, #667eea, #764ba2)',
+
                               display: 'flex',
+
                               alignItems: 'center',
+
                               justifyContent: 'center',
+
                               color: 'white',
-                              marginRight: '12px'
+
+                              marginRight: '12px',
+
+                              fontSize: '20px'
+
                             }}>
+
                               <FontAwesomeIcon icon={faUsers} />
+
                             </div>
+
                             <div>
-                              <h6 className="mb-0 fw-bold">1,247</h6>
-                              <small className="text-muted">Students</small>
+
+                              <div className="fw-bold" style={{ fontSize: '1.5rem', color: '#1a1a2e' }}>1,247</div>
+
+                              <small className="text-muted">Total Students</small>
+
                             </div>
+
                           </div>
+
                         </div>
+
                       </div>
+
                       <div className="col-6">
-                        <div className="card-realistic p-3 mb-3">
+
+                        <div className="p-3 rounded-3" style={{
+
+                          background: 'white',
+
+                          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+
+                          border: '1px solid rgba(72, 187, 120, 0.1)'
+
+                        }}>
+
                           <div className="d-flex align-items-center">
+
                             <div style={{
-                              width: '40px',
-                              height: '40px',
-                              borderRadius: '10px',
+
+                              width: '48px',
+
+                              height: '48px',
+
+                              borderRadius: '14px',
+
                               background: 'linear-gradient(135deg, #48bb78, #38a169)',
+
                               display: 'flex',
+
                               alignItems: 'center',
+
                               justifyContent: 'center',
+
                               color: 'white',
-                              marginRight: '12px'
+
+                              marginRight: '12px',
+
+                              fontSize: '20px'
+
                             }}>
-                              <FontAwesomeIcon icon={faCheck} />
+
+                              <FontAwesomeIcon icon={faChartLine} />
+
                             </div>
+
                             <div>
-                              <h6 className="mb-0 fw-bold">98.5%</h6>
-                              <small className="text-muted">Attendance</small>
+
+                              <div className="fw-bold" style={{ fontSize: '1.5rem', color: '#1a1a2e' }}>98.5%</div>
+
+                              <small className="text-muted">Attendance Rate</small>
+
                             </div>
+
                           </div>
+
                         </div>
+
                       </div>
+
                     </div>
+
+
+
+                    {/* Activity Chart Placeholder */}
+
+                    <div className="mb-4">
+
+                      <h6 className="fw-bold mb-3">Weekly Activity</h6>
+
+                      <div style={{
+
+                        height: '100px',
+
+                        background: 'linear-gradient(180deg, rgba(99,102,241,0.1) 0%, transparent 100%)',
+
+                        borderRadius: '12px',
+
+                        display: 'flex',
+
+                        alignItems: 'flex-end',
+
+                        padding: '10px',
+
+                        gap: '8px'
+
+                      }}>
+
+                        {[40, 65, 45, 80, 55, 90, 70].map((h, i) => (
+
+                          <div key={i} style={{
+
+                            flex: 1,
+
+                            height: `${h}%`,
+
+                            background: `linear-gradient(180deg, #667eea 0%, #764ba2 100%)`,
+
+                            borderRadius: '4px 4px 0 0',
+
+                            transition: 'height 0.5s ease'
+
+                          }}></div>
+
+                        ))}
+
+                      </div>
+
+                    </div>
+
+
+
+                    {/* User Profile */}
 
                     <div className="text-center">
+
                       <div style={{
+
                         width: '80px',
+
                         height: '80px',
+
                         borderRadius: '50%',
+
                         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+
                         display: 'flex',
+
                         alignItems: 'center',
+
                         justifyContent: 'center',
+
                         color: 'white',
-                        fontSize: '24px',
+
+                        fontSize: '28px',
+
                         fontWeight: 'bold',
-                        margin: '0 auto 20px',
-                        animation: 'pulse 2s infinite'
-                      }}>
-                        SK
-                      </div>
-                      <h5 className="fw-bold mb-2" style={{ color: '#1f2145' }}>Welcome to SKOOLWEB</h5>
-                      <p className="text-muted small mb-0">Your complete school management solution</p>
+
+                        margin: '0 auto 12px',
+
+                        boxShadow: '0 8px 20px rgba(99, 102, 241, 0.3)',
+
+                        animation: 'pulse2 2s infinite'
+
+                      }}>SK</div>
+
+                      <h5 className="fw-bold mb-1">Welcome to SKOOLWEB</h5>
+
+                      <p className="text-muted small mb-0">Your AI-powered school management assistant</p>
+
                     </div>
+
                   </div>
+
                 </div>
 
-                {/* Floating Notification */}
-                <div style={{
-                  position: 'absolute',
-                  top: '-20px',
-                  right: '-20px',
-                  background: 'white',
-                  borderRadius: '16px',
-                  padding: '16px',
-                  boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)',
-                  animation: 'float 3s ease-in-out infinite',
-                  border: '2px solid #667eea'
+
+
+                {/* Floating Notification Card */}
+
+                <div className="position-absolute floating-element" style={{
+
+                  top: '-30px',
+
+                  right: '-30px',
+
+                  animationDelay: '1s'
+
                 }}>
-                  <div className="d-flex align-items-center">
-                    <div style={{
-                      width: '32px',
-                      height: '32px',
-                      borderRadius: '50%',
-                      background: 'linear-gradient(135deg, #48bb78, #38a169)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: 'white',
-                      marginRight: '12px'
-                    }}>
-                      ✓
+
+                  <div className="card-pro p-3" style={{
+
+                    background: 'white',
+
+                    borderRadius: '20px',
+
+                    boxShadow: '0 15px 35px rgba(0,0,0,0.15)',
+
+                    border: '2px solid #48bb78',
+
+                    minWidth: '220px'
+
+                  }}>
+
+                    <div className="d-flex align-items-center">
+
+                      <div style={{
+
+                        width: '40px',
+
+                        height: '40px',
+
+                        borderRadius: '50%',
+
+                        background: 'linear-gradient(135deg, #48bb78, #38a169)',
+
+                        display: 'flex',
+
+                        alignItems: 'center',
+
+                        justifyContent: 'center',
+
+                        color: 'white',
+
+                        marginRight: '12px'
+
+                      }}>
+
+                        <FontAwesomeIcon icon={faCheck} />
+
+                      </div>
+
+                      <div>
+
+                        <div className="fw-bold" style={{ fontSize: '14px' }}>Success!</div>
+
+                        <div className="text-muted" style={{ fontSize: '12px' }}>Report generated in 2.3s</div>
+
+                      </div>
+
                     </div>
-                    <div>
-                      <div className="fw-bold small">New Message</div>
-                      <div className="text-muted small">Parent notification sent</div>
-                    </div>
+
                   </div>
+
                 </div>
+
+
+
+                {/* Second Floating Card */}
+
+                <div className="position-absolute floating-element" style={{
+
+                  bottom: '-20px',
+
+                  left: '-20px',
+
+                  animationDelay: '2s'
+
+                }}>
+
+                  <div className="card-pro p-3" style={{
+
+                    background: 'white',
+
+                    borderRadius: '20px',
+
+                    boxShadow: '0 15px 35px rgba(0,0,0,0.15)',
+
+                    border: '2px solid #f093fb',
+
+                    minWidth: '200px'
+
+                  }}>
+
+                    <div className="d-flex align-items-center">
+
+                      <div style={{
+
+                        width: '40px',
+
+                        height: '40px',
+
+                        borderRadius: '50%',
+
+                        background: 'linear-gradient(135deg, #f093fb, #f5576c)',
+
+                        display: 'flex',
+
+                        alignItems: 'center',
+
+                        justifyContent: 'center',
+
+                        color: 'white',
+
+                        marginRight: '12px'
+
+                      }}>
+
+                        <FontAwesomeIcon icon={faBell} />
+
+                      </div>
+
+                      <div>
+
+                        <div className="fw-bold" style={{ fontSize: '14px' }}>New Alert</div>
+
+                        <div className="text-muted" style={{ fontSize: '12px' }}>3 pending approvals</div>
+
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
               </div>
+
             </div>
+
           </div>
+
         </div>
+
       </section>
+
+
 
       {/* Features Section */}
-      <section id="features" className="py-5" style={{ backgroundColor: '#f8f9ff' }}>
+
+      <section id="features" ref={featuresRef} className="py-5 position-relative mesh-gradient" style={{ paddingTop: '100px', paddingBottom: '100px' }}>
+
         <div className="container">
-          <div className="text-center mb-5">
-            <h3 style={{
-              color: '#4f46e5',
-              marginBottom: '0.75rem',
-              fontWeight: '700',
-              letterSpacing: '0.02em',
-              fontSize: '1.15rem'
+
+          <div className="text-center mb-5 scroll-animate">
+
+            <span className="badge rounded-pill px-4 py-2 mb-3" style={{
+
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+
+              color: 'white',
+
+              fontWeight: '600',
+
+              fontSize: '14px'
+
             }}>
+
+              <FontAwesomeIcon icon={faMagic} className="me-2" />
+
               Powerful Features
-            </h3>
-            <h2 className="display-realistic mb-4" style={{ fontSize: '2.8rem' }}>
-              Everything Your School Needs
+
+            </span>
+
+            <h2 className="display-4 fw-black mb-3" style={{ fontSize: 'clamp(2rem, 4vw, 3.5rem)' }}>
+
+              Everything Your School <span className="gradient-text-pro">Needs</span>
+
             </h2>
-            <p className="lead-realistic mb-5" style={{ maxWidth: '600px', margin: '0 auto' }}>
+
+            <p className="lead text-muted mb-4" style={{ maxWidth: '700px', margin: '0 auto', fontSize: '1.2rem' }}>
+
               Comprehensive tools designed specifically for modern educational institutions, helping you manage every aspect of school operations with ease and efficiency.
+
             </p>
+
           </div>
 
+
+
           <div className="row g-4">
+
             {[
+
               {
+
                 icon: faUsers,
+
                 title: 'Smart Student Management',
-                desc: 'Complete student profiles with academic records, attendance tracking, and personalized learning paths. Real-time updates for parents and teachers.',
+
+                desc: 'Complete student profiles with academic records, attendance tracking, and personalized learning paths.',
+
                 color: '#667eea',
-                stats: '1,247 Students'
+
+                stat: '1,247 Students'
+
               },
+
               {
+
                 icon: faBookOpen,
-                title: 'Advanced Curriculum Management',
-                desc: 'Dynamic syllabus planning, lesson scheduling, and resource allocation. Track progress and adapt to individual learning needs.',
+
+                title: 'Advanced Curriculum',
+
+                desc: 'Dynamic syllabus planning, lesson scheduling, and resource allocation with real-time progress tracking.',
+
                 color: '#764ba2',
-                stats: '85 Courses'
+
+                stat: '85 Courses'
+
               },
+
               {
+
                 icon: faClipboardList,
-                title: 'Intelligent Attendance System',
-                desc: 'Automated attendance marking with biometric integration, real-time notifications, and comprehensive reporting for compliance.',
+
+                title: 'Smart Attendance',
+
+                desc: 'Digital attendance tracking with instant parent notifications and comprehensive reports.',
+
                 color: '#48bb78',
-                stats: '98.5% Avg'
+
+                stat: '98.5% Average'
+
               },
+
               {
+
                 icon: faChartLine,
+
                 title: 'Analytics & Insights',
-                desc: 'Data-driven decision making with detailed reports, performance analytics, and predictive insights for student success.',
+
+                desc: 'Data-driven decision making with detailed reports, performance analytics, and predictive insights.',
+
                 color: '#f093fb',
-                stats: '50+ Reports'
+
+                stat: '50+ Reports'
+
               },
+
               {
+
                 icon: faBullhorn,
+
                 title: 'Unified Communication',
-                desc: 'Seamless messaging between teachers, parents, and students. Announcements, events, and emergency notifications in one platform.',
+
+                desc: 'Seamless messaging between teachers, parents, and students with emergency notification system.',
+
                 color: '#f5576c',
-                stats: '24/7 Support'
+
+                stat: '24/7 Support'
+
               },
+
               {
+
                 icon: faCalendarAlt,
+
                 title: 'Smart Scheduling',
-                desc: 'AI-powered timetable generation, resource booking, and conflict resolution. Optimize your school\'s time management.',
+
+                desc: 'AI-powered timetable generation, resource booking, and automatic conflict resolution.',
+
                 color: '#4facfe',
-                stats: 'Zero Conflicts'
-              },
-            ].map((feature, index) => (
-              <div key={index} className={`col-lg-4 col-md-6 animate-fade-up stagger-${index + 1}`}>
-                <div className="card-realistic h-100 p-4 interactive-element feature-card" style={{
-                  border: 'none',
-                  transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
-                }}>
-                  <div className="d-flex align-items-center mb-3">
-                    <div style={{
-                      background: `linear-gradient(135deg, ${feature.color}, ${feature.color}dd)`,
-                      width: '60px',
-                      height: '60px',
-                      borderRadius: '16px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      flexShrink: 0,
-                      boxShadow: `0 8px 25px ${feature.color}30`,
-                      marginRight: '16px'
-                    }}>
-                      <FontAwesomeIcon icon={feature.icon} size="lg" style={{ color: 'white' }} />
-                    </div>
-                    <div className="flex-grow-1">
-                      <h6 className="fw-bold mb-1" style={{ color: feature.color }}>{feature.stats}</h6>
-                      <small className="text-muted">Live Data</small>
-                    </div>
-                  </div>
-                  <h5 className="fw-bold mb-3" style={{ color: '#1f2145' }}>{feature.title}</h5>
-                  <p className="text-muted mb-0" style={{ lineHeight: '1.6' }}>{feature.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
 
-          {/* Feature Showcase */}
-          <div className="row mt-5 align-items-center">
-            <div className="col-lg-6">
-              <div className="card-realistic p-4" style={{
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                color: 'white',
-                border: 'none'
-              }}>
-                <div className="d-flex align-items-center mb-3">
-                  <FontAwesomeIcon icon={faShieldAlt} size="2x" className="me-3" />
-                  <h4 className="mb-0 fw-bold">Enterprise Security</h4>
-                </div>
-                <p className="mb-4 opacity-90">Bank-level encryption, GDPR compliance, and 99.9% uptime guarantee. Your school data is completely secure.</p>
-                <div className="d-flex gap-3">
-                  <div className="text-center">
-                    <div className="fw-bold h4 mb-0">256-bit</div>
-                    <small className="opacity-75">SSL Encryption</small>
-                  </div>
-                  <div className="text-center">
-                    <div className="fw-bold h4 mb-0">99.9%</div>
-                    <small className="opacity-75">Uptime</small>
-                  </div>
-                  <div className="text-center">
-                    <div className="fw-bold h4 mb-0">24/7</div>
-                    <small className="opacity-75">Monitoring</small>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-6">
-              <div className="card-realistic p-4" style={{
-                background: 'linear-gradient(135deg, #48bb78 0%, #38a169 100%)',
-                color: 'white',
-                border: 'none'
-              }}>
-                <div className="d-flex align-items-center mb-3">
-                  <FontAwesomeIcon icon={faGlobe} size="2x" className="me-3" />
-                  <h4 className="mb-0 fw-bold">Global Reach</h4>
-                </div>
-                <p className="mb-4 opacity-90">Used by schools in 25+ countries with multi-language support and localized features.</p>
-                <div className="d-flex gap-3 flex-wrap">
-                  <span className="badge bg-white bg-opacity-20 px-3 py-2">🇺🇸 English</span>
-                  <span className="badge bg-white bg-opacity-20 px-3 py-2">🇪🇸 Español</span>
-                  <span className="badge bg-white bg-opacity-20 px-3 py-2">🇫🇷 Français</span>
-                  <span className="badge bg-white bg-opacity-20 px-3 py-2">🇩🇪 Deutsch</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+                stat: 'Zero Conflicts'
 
-      {/* Students Showcase Section */}
-      <section className="py-5" style={{ backgroundColor: '#f8f9ff' }}>
-        <div className="container">
-          <div className="text-center mb-5">
-            <span style={{
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              color: 'white',
-              padding: '8px 16px',
-              borderRadius: '20px',
-              display: 'inline-block',
-              fontSize: '14px',
-              fontWeight: 'bold',
-              marginBottom: '20px'
-            }}>Our Students</span>
-            <h2 className="display-5 fw-bold mb-3">Success Stories</h2>
-            <p className="lead text-muted mb-5">Meet some of our outstanding students who are excelling with SKOOLWEB</p>
-          </div>
-
-          <div className="row g-4">
-            {[
-              {
-                name: 'Emma Thompson',
-                grade: 'Grade 10',
-                achievement: 'Top Student Award',
-                image: '/images/emma.jpg',
-                imageAlt: 'Female student smiling at desk',
-                quote: 'SKOOLWEB helped me stay organized and achieve my goals!'
-              },
-              {
-                name: 'Alex Rodriguez',
-                grade: 'Grade 8',
-                achievement: 'Science Fair Winner',
-                image: '/images/alex.jpg',
-                imageAlt: 'Student working on a science project',
-                quote: 'The platform makes learning fun and interactive.'
-              },
-              {
-                name: 'Sophia Chen',
-                grade: 'Grade 12',
-                achievement: 'Valedictorian',
-                image: '/images/sophia.jpg',
-                imageAlt: 'Student celebrating academic achievement',
-                quote: 'SKOOLWEB prepared me for college success.'
-              },
-              {
-                name: 'Marcus Johnson',
-                grade: 'Grade 9',
-                achievement: 'Athletics MVP',
-                image: '/images/marcus.jpg',
-                imageAlt: 'Active student with sports spirit',
-                quote: 'Balancing sports and studies has never been easier!'
               }
-            ].map((student, index) => (
-              <div key={index} className="col-md-3 animate-fade-up student-card" style={{ animationDelay: `${150 + index * 100}ms` }}>
-                <div className="card h-100 border-0 shadow-sm" style={{
-                  borderRadius: '15px',
-                  overflow: 'hidden',
-                  transition: 'all 0.3s ease',
-                  cursor: 'pointer'
-                }}>
-                  <img src={student.image} alt={student.imageAlt} className="student-photo" />
-                  <div className="card-body text-center">
-                    <h6 className="fw-bold mb-1">{student.name}</h6>
-                    <p className="text-muted small mb-2">{student.grade}</p>
-                    <span className="badge bg-primary mb-3">{student.achievement}</span>
-                    <p className="card-text small">"{student.quote}"</p>
+
+            ].map((feature, index) => (
+
+              <div key={index} className="col-lg-4 col-md-6 scroll-animate" style={{ transitionDelay: `${index * 100}ms` }}>
+
+                <div className="card-pro h-100">
+
+                  <div className="d-flex align-items-center mb-4">
+
+                    <div style={{
+
+                      width: '72px',
+
+                      height: '72px',
+
+                      borderRadius: '20px',
+
+                      background: `linear-gradient(135deg, ${feature.color}, ${feature.color}dd)`,
+
+                      display: 'flex',
+
+                      alignItems: 'center',
+
+                      justifyContent: 'center',
+
+                      flexShrink: 0,
+
+                      boxShadow: `0 12px 30px ${feature.color}40`,
+
+                      marginRight: '20px',
+
+                      fontSize: '28px',
+
+                      color: 'white'
+
+                    }}>
+
+                      <FontAwesomeIcon icon={feature.icon} />
+
+                    </div>
+
+                    <div>
+
+                      <div className="fw-bold" style={{ fontSize: '1.5rem', color: feature.color }}>{feature.stat}</div>
+
+                      <small className="text-muted">Live Data</small>
+
+                    </div>
+
                   </div>
+
+                  <h4 className="fw-bold mb-3" style={{ color: '#1a1a2e' }}>{feature.title}</h4>
+
+                  <p className="text-muted mb-0" style={{ lineHeight: 1.7 }}>{feature.desc}</p>
+
                 </div>
+
               </div>
+
             ))}
+
           </div>
+
         </div>
+
       </section>
 
-      {/* Template Capabilities */}
-      <section className="py-5" style={{ backgroundColor: '#f8f9ff' }}>
-        <div className="container">
-          <div className="text-center mb-5">
-            <span style={{
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              color: 'white',
-              padding: '8px 16px',
-              borderRadius: '20px',
-              display: 'inline-block',
-              fontSize: '14px',
-              fontWeight: 'bold',
-              marginBottom: '20px'
-            }}>Template Benefits</span>
-            <h2 className="display-5 fw-bold mb-3">Why Choose SKOOLWEB?</h2>
-          </div>
 
-          <div className="row g-4 animate-fade-up animate-delay-100">
-            {[
-              { icon: faClock, title: '10x Faster Development', desc: 'Pre-built components and pages save weeks of development time' },
-              { icon: faTrophy, title: 'Production Ready', desc: 'Optimized performance and best practices built-in' },
-              { icon: faDesktop, title: 'Fully Responsive', desc: 'Works perfectly on desktop, tablet, and mobile devices' },
-              { icon: faLightbulb, title: 'Easy to Customize', desc: 'Clean code structure for quick modifications' },
-            ].map((item, index) => (
-              <div key={index} className="col-md-6 animate-fade-up" style={{ animationDelay: `${150 + index * 100}ms` }}>
-                <div className="d-flex gap-4 p-4" style={{
-                  background: 'white',
-                  borderRadius: '12px',
-                  boxShadow: '0 5px 15px rgba(0,0,0,0.08)',
-                  transition: 'all 0.3s ease'
-                }}>
-                  <div style={{
-                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                    width: '50px',
-                    height: '50px',
-                    borderRadius: '8px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0
-                  }}>
-                    <FontAwesomeIcon icon={item.icon} size="lg" style={{ color: 'white' }} />
-                  </div>
-                  <div>
-                    <h5 className="fw-bold mb-1">{item.title}</h5>
-                    <p className="text-muted mb-0">{item.desc}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="py-5 animate-fade-up animate-delay-100" style={{ backgroundColor: '#f8f9ff' }}>
+
+      <section id="pricing" className="py-5" style={{ paddingTop: '100px', paddingBottom: '100px', background: 'white' }}>
+
         <div className="container">
-          <div className="text-center mb-5">
-            <span style={{
+
+          <div className="text-center mb-5 scroll-animate">
+
+            <span className="badge rounded-pill px-4 py-2 mb-3" style={{
+
               background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+
               color: 'white',
-              padding: '8px 16px',
-              borderRadius: '20px',
-              display: 'inline-block',
-              fontSize: '14px',
-              fontWeight: 'bold',
-              marginBottom: '20px'
-            }}>Pricing</span>
-            <h2 className="display-5 fw-bold mb-3">Clear pricing for school success</h2>
-            <p className="lead text-muted mb-5">Pick the best SKOOLWEB plan for your institution and start automating today.</p>
+
+              fontWeight: '600',
+
+              fontSize: '14px'
+
+            }}>
+
+              <FontAwesomeIcon icon={faMoneyBillWave} className="me-2" />
+
+              Flexible Pricing
+
+            </span>
+
+            <h2 className="display-4 fw-black mb-3" style={{ fontSize: 'clamp(2rem, 4vw, 3.5rem)' }}>
+
+              Clear pricing for <span className="gradient-text-pro">school success</span>
+
+            </h2>
+
+            <p className="lead text-muted mb-4" style={{ maxWidth: '600px', margin: '0 auto', fontSize: '1.2rem' }}>
+
+              Pick the best SKOOLWEB plan for your institution and start automating today.
+
+            </p>
+
           </div>
 
-          <div className="row g-4">
+
+
+          <div className="row g-4 align-items-center justify-content-center">
+
             {[
+
               {
-                title: 'Starter',
-                price: '$59',
+
+                title: 'Free',
+
+                price: '$0',
+
                 description: 'Perfect for small schools starting their digital journey',
-                features: ['Student profiles', 'Attendance tracking', 'Parent portal', 'Email support'],
-                label: 'Request Demo'
+
+                features: [
+
+                  'PeopleCore',
+
+                  'AcademicCore',
+
+                  'Fees collection (basic)',
+
+                  'Library (limited)',
+
+                  'Transport (basic)',
+
+                  'Reports (summary)',
+
+                  'User management (basic)',
+
+                  'Notice board & events'
+
+                ],
+
+                label: 'Request Demo',
+
+                popular: false
+
               },
+
               {
-                title: 'Growth',
-                price: '$129',
+
+                title: 'Paid Plan',
+
+                price: '$25,000',
+
                 description: 'For growing schools that want analytics and automation',
-                features: ['Everything in Starter', 'Grade insights', 'Timetable planner', 'SMS alerts'],
-                popular: true,
-                label: 'Book Call'
-              },
-              {
-                title: 'Enterprise',
-                price: 'Custom',
-                description: 'Best for larger schools and district-wide rollouts',
-                features: ['Custom setup', 'Dedicated success partner', 'Advanced reports', 'Priority support'],
-                label: 'Contact Sales'
+
+                features: [
+
+                  'PeopleCore',
+
+                  'AcademicCore',
+
+                  'Fees collection (full)',
+
+                  'Library (full)',
+
+                  'Hostel',
+
+                  'Transport',
+
+                  'HRM',
+
+                  'Finance & accounts',
+
+                  'Reports (advanced)',
+
+                  'User management',
+
+                  'Membership Management',
+
+                  'School settings',
+
+                  'Application toolkit',
+
+                  'Notice board & events',
+
+                  'Content & pages',
+
+                  'Advanced Analytics',
+
+                  'API Access',
+
+                  'Priority Support'
+
+                ],
+
+                label: 'Book Call',
+
+                popular: true
+
               }
-            ].map((plan, index) => (
-              <div key={index} className="col-md-4 animate-fade-up" style={{ animationDelay: `${150 + index * 120}ms` }}>
-                <div className={`pricing-card card h-100 p-4 rounded-4 ${plan.popular ? 'pricing-card-popular' : 'bg-white'}`}>
-                  <div className="card-body d-flex flex-column h-100">
-                    {plan.popular && <span className="pricing-badge mb-3">Popular</span>}
-                    <h5 className="fw-bold">{plan.title}</h5>
-                    <h2 className="display-5 fw-bold my-3">{plan.price}</h2>
-                    <p className="text-muted">{plan.description}</p>
-                    <ul className="list-unstyled mt-4 mb-4">
-                      {plan.features.map((feature, j) => (
-                        <li key={j} className="d-flex align-items-center mb-2 text-muted">
-                          <FontAwesomeIcon icon={faCheck} className="me-2 text-success" />
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                    <Link to="/contact" className={`btn btn-lg w-100 fw-bold ${plan.popular ? 'btn-primary' : 'btn-outline-primary'}`}>{plan.label}</Link>
+
+            ].map((plan, index) => {
+
+              const isExpanded = expandedPlans[index];
+
+              // डिफ़ॉल्ट रूप से सिर्फ पहले 4 फीचर्स बाहर दिखेंगे
+
+              const initialFeatures = plan.features.slice(0, 4);
+
+
+
+              return (
+
+                <div key={index} className="col-md-5 col-lg-4 scroll-animate" style={{ transitionDelay: `${index * 150}ms` }}>
+
+                  <div className={`card-pro h-100 ${plan.popular ? 'position-relative' : ''}`} style={{
+
+                    border: plan.popular ? '3px solid #667eea' : 'none',
+
+                    transform: plan.popular ? 'scale(1.05)' : 'scale(1)',
+
+                    display: 'flex',
+
+                    flexDirection: 'column',
+
+                    minHeight: '520px' // कार्ड की हाइट फिक्स रखने के लिए
+
+                  }}>
+
+                    {plan.popular && (
+
+                      <div style={{
+
+                        position: 'absolute',
+
+                        top: '-12px',
+
+                        left: '50%',
+
+                        transform: 'translateX(-50%)',
+
+                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+
+                        color: 'white',
+
+                        padding: '6px 20px',
+
+                        borderRadius: '20px',
+
+                        fontSize: '12px',
+
+                        fontWeight: '700',
+
+                        whiteSpace: 'nowrap',
+
+                        zIndex: 10
+
+                      }}>
+
+                        MOST POPULAR
+
+                      </div>
+
+                    )}
+
+                   
+
+                    <div className="card-body d-flex flex-column h-100 pt-4" style={{ position: 'relative' }}>
+
+                      <h4 className="fw-bold mb-2">{plan.title}</h4>
+
+                      <div className="mb-3">
+
+                        <span className="display-4 fw-black">{plan.price}</span>
+
+                        {plan.price !== 'Custom' && <span className="text-muted">/month</span>}
+
+                      </div>
+
+                      <p className="text-muted mb-4">{plan.description}</p>
+
+                     
+
+                      {/* डिफ़ॉल्ट रूप से दिखने वाली लिस्ट (सिर्फ 4 फीचर्स) */}
+
+                      <ul className="list-unstyled mb-2" style={{ flexGrow: 1 }}>
+
+                        {initialFeatures.map((feature, j) => (
+
+                          <li key={j} className="d-flex align-items-center mb-3">
+
+                            <FontAwesomeIcon icon={faCheckCircle} className="me-3" style={{ color: '#48bb78', fontSize: '18px', flexShrink: 0 }} />
+
+                            <span className="text-dark">{feature}</span>
+
+                          </li>
+
+                        ))}
+
+                      </ul>
+
+
+
+                      {/* इन-प्लेस स्क्रोल होने वाला पॉपअप बॉक्स */}
+
+                      {isExpanded && (
+
+                        <div className="features-scrollbar" style={{
+
+                          position: 'absolute',
+
+                          top: '160px', // प्राइस और डिस्क्रिप्शन के ठीक नीचे सेट किया है
+
+                          left: '15px',
+
+                          right: '15px',
+
+                          bottom: '80px', // बटन के ऊपर तक रहेगा
+
+                          background: '#ffffff',
+
+                          boxShadow: '0 -5px 25px rgba(0,0,0,0.1), 0 10px 25px rgba(0,0,0,0.1)',
+
+                          borderRadius: '16px',
+
+                          padding: '20px',
+
+                          overflowY: 'auto',
+
+                          zIndex: 5,
+
+                          border: '1px solid #e2e8f0',
+
+                          animation: 'slideUpFade 0.3s ease-out'
+
+                        }}>
+
+                          <div className="d-flex justify-content-between align-items-center mb-3">
+
+                            <h6 className="fw-bold mb-0 text-primary">All Features ({plan.features.length})</h6>
+
+                            <button
+
+                              onClick={() => toggleFeatures(index)}
+
+                              className="btn-close"
+
+                              style={{ fontSize: '12px', cursor: 'pointer' }}
+
+                              aria-label="Close"
+
+                            ></button>
+
+                          </div>
+
+                          <ul className="list-unstyled mb-0">
+
+                            {plan.features.map((feature, j) => (
+
+                              <li key={j} className="d-flex align-items-center mb-3">
+
+                                <FontAwesomeIcon icon={faCheckCircle} className="me-3" style={{ color: '#48bb78', fontSize: '16px', flexShrink: 0 }} />
+
+                                <span className="text-dark" style={{ fontSize: '14px' }}>{feature}</span>
+
+                              </li>
+
+                            ))}
+
+                          </ul>
+
+                        </div>
+
+                      )}
+
+
+
+                      {/* Show More बटन */}
+
+                      {plan.features.length > 4 && (
+
+                        <button
+
+                          onClick={() => toggleFeatures(index)}
+
+                          className="btn btn-link text-decoration-none p-0 mb-4 d-flex align-items-center fw-bold text-start mt-2"
+
+                          style={{ color: '#667eea', fontSize: '14px', background: 'none', border: 'none', zIndex: 4 }}
+
+                        >
+
+                          {isExpanded ? 'Hide Popup ↑' : `Show More (${plan.features.length - 4} more) ↓`}
+
+                        </button>
+
+                      )}
+
+
+
+                      <Link to="/contact" className={`btn btn-lg w-100 fw-bold rounded-pill ${plan.popular ? 'btn-primary' : 'btn-outline-primary'}`} style={{
+
+                        padding: '14px',
+
+                        borderRadius: '50px',
+
+                        fontWeight: '600',
+
+                        borderWidth: '2px',
+
+                        marginTop: 'auto',
+
+                        zIndex: 4
+
+                      }}>
+
+                        {plan.label}
+
+                      </Link>
+
+                    </div>
+
                   </div>
+
                 </div>
-              </div>
-            ))}
+
+              );
+
+            })}
+
           </div>
+
         </div>
+
       </section>
 
-      {/* Testimonials */}
-      <section id="testimonials" className="py-5 animate-fade-up animate-delay-100">
+
+
+      {/* Testimonials Section */}
+
+      <section id="testimonials" className="py-5 mesh-gradient" style={{ paddingTop: '100px', paddingBottom: '100px' }}>
+
         <div className="container">
-          <div className="text-center mb-5">
-            <span style={{
+
+          <div className="text-center mb-5 scroll-animate">
+
+            <span className="badge rounded-pill px-4 py-2 mb-3" style={{
+
               background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+
               color: 'white',
-              padding: '8px 16px',
-              borderRadius: '20px',
-              display: 'inline-block',
-              fontSize: '14px',
-              fontWeight: 'bold',
-              marginBottom: '20px'
-            }}>Testimonials</span>
-            <h2 className="display-5 fw-bold mb-3">Loved by Schools Worldwide</h2>
-            <p className="lead text-muted">See what our users have to say</p>
+
+              fontWeight: '600',
+
+              fontSize: '14px'
+
+            }}>
+
+              <FontAwesomeIcon icon={faQuoteLeft} className="me-2" />
+
+              Testimonials
+
+            </span>
+
+            <h2 className="display-4 fw-black mb-3" style={{ fontSize: 'clamp(2rem, 4vw, 3.5rem)' }}>
+
+              Loved by Schools <span className="gradient-text-pro">Worldwide</span>
+
+            </h2>
+
+            <p className="lead text-muted mb-4" style={{ maxWidth: '600px', margin: '0 auto', fontSize: '1.2rem' }}>
+
+              See what educators, administrators, and parents are saying about SKOOLWEB.
+
+            </p>
+
           </div>
+
+
 
           <div className="row g-4">
+
             {[
+
               {
+
                 name: 'Sarah Johnson',
+
                 role: 'School Principal',
-                text: 'SKOOLWEB completely transformed how we manage our school. The interface is so intuitive!',
-                avatar: '👩‍💼'
+
+                school: 'Westfield Academy',
+
+                text: 'SKOOLWEB completely transformed how we manage our school. The interface is intuitive, and the AI features save us hours every week. Parent satisfaction has increased by 40%.',
+
+                avatar: 'SJ',
+
+                color: '#667eea'
+
               },
+
               {
+
                 name: 'Ahmed Khan',
-                role: 'IT Manager',
-                text: 'Implementation was smooth and support team is incredibly responsive. Highly recommended!',
-                avatar: '👨‍💻'
+
+                role: 'IT Director',
+
+                school: 'Global International School',
+
+                text: 'Implementation was seamless and the support team is incredibly responsive. The API integrations work flawlessly with our existing systems. Highly recommended!',
+
+                avatar: 'AK',
+
+                color: '#764ba2'
+
               },
+
               {
+
                 name: 'Maria Garcia',
-                role: 'Teacher',
-                text: 'Grading and attendance tracking is now so easy. Parents love the instant notifications!',
-                avatar: '👩‍🏫'
-              },
+
+                role: 'Senior Teacher',
+
+                school: 'Sunrise Elementary',
+
+                text: 'Grading and attendance tracking is now effortless. Parents love the instant notifications and the students are more engaged than ever. It\'s a game-changer!',
+
+                avatar: 'MG',
+
+                color: '#48bb78'
+
+              }
+
             ].map((testimonial, index) => (
-              <div key={index} className="col-md-4 animate-fade-up" style={{ animationDelay: `${150 + index * 120}ms` }}>
-                <div className="card h-100 border-0 testimonial-card" style={{
-                  boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
-                  borderRadius: '15px'
+
+              <div key={index} className="col-md-4 scroll-animate" style={{ transitionDelay: `${index * 150}ms` }}>
+
+                <div className="card-pro h-100" style={{
+
+                  background: 'white',
+
+                  position: 'relative'
+
                 }}>
-                  <div className="card-body">
-                    <div className="mb-3 d-flex">
-                      {[...Array(5)].map((_, i) => (
-                        <FontAwesomeIcon key={i} icon={faStar} className="me-1" style={{ color: '#ffc107' }} />
-                      ))}
-                    </div>
-                    <p className="card-text mb-4">"{testimonial.text}"</p>
-                    <div className="d-flex align-items-center">
-                      <div style={{
-                        width: '45px',
-                        height: '45px',
-                        borderRadius: '50%',
-                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '24px',
-                        marginRight: '12px',
-                        transition: 'transform 0.3s ease'
-                      }}>
-                        {testimonial.avatar}
-                      </div>
-                      <div>
-                        <h6 className="mb-0 fw-bold">{testimonial.name}</h6>
-                        <small className="text-muted">{testimonial.role}</small>
-                      </div>
-                    </div>
+
+                  <div style={{
+
+                    position: 'absolute',
+
+                    top: '20px',
+
+                    right: '20px',
+
+                    fontSize: '60px',
+
+                    color: 'rgba(99, 102, 241, 0.1)',
+
+                    lineHeight: 1
+
+                  }}>
+
+                    <FontAwesomeIcon icon={faQuoteLeft} />
+
                   </div>
+
+                  <div className="mb-4">
+
+                    {[...Array(5)].map((_, i) => (
+
+                      <FontAwesomeIcon key={i} icon={faStar} className="text-warning me-1" style={{ fontSize: '18px' }} />
+
+                    ))}
+
+                  </div>
+
+                  <p className="text-dark mb-4" style={{ lineHeight: 1.8, fontSize: '1.05rem' }}>
+
+                    "{testimonial.text}"
+
+                  </p>
+
+                  <div className="d-flex align-items-center">
+
+                    <div style={{
+
+                      width: '56px',
+
+                      height: '56px',
+
+                      borderRadius: '50%',
+
+                      background: `linear-gradient(135deg, ${testimonial.color}, ${testimonial.color}dd)`,
+
+                      display: 'flex',
+
+                      alignItems: 'center',
+
+                      justifyContent: 'center',
+
+                      color: 'white',
+
+                      fontWeight: 'bold',
+
+                      fontSize: '20px',
+
+                      marginRight: '16px'
+
+                    }}>
+
+                      {testimonial.avatar}
+
+                    </div>
+
+                    <div>
+
+                      <h6 className="fw-bold mb-0">{testimonial.name}</h6>
+
+                      <small className="text-muted">{testimonial.role}</small>
+
+                      <div className="small" style={{ color: testimonial.color, fontWeight: '600' }}>{testimonial.school}</div>
+
+                    </div>
+
+                  </div>
+
                 </div>
+
               </div>
+
             ))}
+
           </div>
+
         </div>
+
       </section>
+
+
 
       {/* CTA Section */}
-      <section className="animate-fade-up animate-delay-100" style={{
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        color: 'white',
+
+      <section className="py-5" style={{
+
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
+
+        backgroundSize: '200% 200%',
+
+        animation: 'gradientShift 8s ease infinite',
+
         paddingTop: '80px',
-        paddingBottom: '80px'
+
+        paddingBottom: '80px',
+
+        position: 'relative',
+
+        overflow: 'hidden'
+
       }}>
-        <div className="container text-center">
-          <h2 className="display-4 fw-bold mb-4">Ready to Transform Your School?</h2>
-          <p className="lead mb-5">Join 500+ schools already using SKOOLWEB to streamline their operations</p>
+
+        {/* Animated circles */}
+
+        <div style={{
+
+          position: 'absolute',
+
+          top: '-50px',
+
+          left: '-50px',
+
+          width: '200px',
+
+          height: '200px',
+
+          borderRadius: '50%',
+
+          background: 'rgba(255,255,255,0.1)',
+
+          animation: 'float3D 8s ease-in-out infinite'
+
+        }}></div>
+
+        <div style={{
+
+          position: 'absolute',
+
+          bottom: '-50px',
+
+          right: '-50px',
+
+          width: '250px',
+
+          height: '250px',
+
+          borderRadius: '50%',
+
+          background: 'rgba(255,255,255,0.1)',
+
+          animation: 'float3D 10s ease-in-out infinite reverse'
+
+        }}></div>
+
+
+
+        <div className="container text-center position-relative" style={{ zIndex: 2 }}>
+
+          <h2 className="display-4 fw-black mb-4" style={{ fontSize: 'clamp(2rem, 4vw, 3.5rem)', color: 'white', textShadow: '0 4px 20px rgba(0,0,0,0.2)' }}>
+
+            Ready to Transform Your School?
+
+          </h2>
+
+          <p className="lead mb-5" style={{ fontSize: '1.3rem', color: 'rgba(255,255,255,0.9)', maxWidth: '600px', margin: '0 auto' }}>
+
+            Join 500+ forward-thinking schools already using SKOOLWEB to streamline operations and enhance learning outcomes.
+
+          </p>
+
           <div className="d-flex flex-wrap gap-3 justify-content-center">
-            <Link to="/contact" className="btn btn-light btn-lg fw-bold px-5">
-              <FontAwesomeIcon icon={faArrowRight} className="me-2" />
+
+            <Link to="/contact" className="btn btn-pro btn-light btn-lg px-6 py-3 rounded-pill" style={{
+
+              background: 'white',
+
+              color: '#667eea',
+
+              fontWeight: '700',
+
+              fontSize: '1.1rem',
+
+              padding: '18px 42px',
+
+              boxShadow: '0 20px 40px rgba(0,0,0,0.2)',
+
+              border: 'none'
+
+            }}>
+
+              <FontAwesomeIcon icon={faRocket} className="me-2" />
+
               Request a Demo
+
             </Link>
-            <a href="#pricing" className="btn btn-outline-light btn-lg fw-bold px-5">View Pricing</a>
+
+            <a href="#pricing" className="btn btn-pro btn-outline-light btn-lg px-6 py-3 rounded-pill" style={{
+
+              borderWidth: '2px',
+
+              fontWeight: '600',
+
+              fontSize: '1.1rem',
+
+              padding: '18px 42px',
+
+              backdropFilter: 'blur(10px)',
+
+              background: 'rgba(255,255,255,0.1)'
+
+            }}>
+
+              View Pricing
+
+              <FontAwesomeIcon icon={faChevronRight} className="ms-2" />
+
+            </a>
+
           </div>
+
         </div>
+
       </section>
 
+
+
       {/* Footer */}
-      <footer className="animate-fade-up animate-delay-100" style={{ background: '#0f172a', color: 'white', paddingTop: '60px', paddingBottom: '30px' }}>
+
+      <footer style={{ background: '#0f172a', color: 'white', paddingTop: '80px', paddingBottom: '40px' }}>
+
         <div className="container">
+
           <div className="row mb-5">
-            <div className="col-lg-3 col-md-6 mb-4">
-              <div className="d-flex align-items-center mb-3">
+
+            <div className="col-lg-4 col-md-6 mb-4">
+
+              <div className="d-flex align-items-center mb-4">
+
                 <div style={{
+
                   background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                  width: '40px',
-                  height: '40px',
-                  borderRadius: '8px',
+
+                  width: '48px',
+
+                  height: '48px',
+
+                  borderRadius: '14px',
+
                   display: 'flex',
+
                   alignItems: 'center',
+
                   justifyContent: 'center',
+
                   color: 'white',
-                  marginRight: '10px',
-                  fontSize: '20px'
+
+                  marginRight: '14px',
+
+                  fontSize: '22px',
+
+                  fontWeight: '900'
+
                 }}>SK</div>
-                <h5 className="mb-0 fw-bold">SKOOLWEB</h5>
+
+                <h5 className="mb-0 fw-bold" style={{ fontSize: '1.5rem' }}>SKOOLWEB</h5>
+
               </div>
-              <p style={{ color: '#94a3b8' }}>Transforming education with innovative school management solutions that empower educators, engage parents, and inspire students.</p>
-              <div className="d-flex gap-3 mt-3">
-                <a href="https://twitter.com" target="_blank" rel="noreferrer" className="text-white hover-primary">
-                  <FontAwesomeIcon icon={faTwitter} size="lg" />
-                </a>
-                <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="text-white hover-primary">
-                  <FontAwesomeIcon icon={faLinkedin} size="lg" />
-                </a>
-                <a href="https://facebook.com" target="_blank" rel="noreferrer" className="text-white hover-primary">
-                  <FontAwesomeIcon icon={faFacebook} size="lg" />
-                </a>
+
+              <p style={{ color: '#94a3b8', lineHeight: 1.8, fontSize: '1.05rem' }}>
+
+                Transforming education with innovative school management solutions that empower educators, engage parents, and inspire students worldwide.
+
+              </p>
+
+              <div className="d-flex gap-3 mt-4">
+
+                {[faTwitter, faLinkedin, faFacebook, faInstagram, faYoutube].map((icon, idx) => (
+
+                  <a key={idx} href="#social" className="text-white" style={{
+
+                    width: '40px',
+
+                    height: '40px',
+
+                    borderRadius: '10px',
+
+                    background: 'rgba(255,255,255,0.1)',
+
+                    display: 'flex',
+
+                    alignItems: 'center',
+
+                    justifyContent: 'center',
+
+                    transition: 'all 0.3s ease'
+
+                  }}
+
+                    onMouseEnter={(e) => {
+
+                      e.target.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+
+                      e.target.style.transform = 'translateY(-3px)';
+
+                    }}
+
+                    onMouseLeave={(e) => {
+
+                      e.target.style.background = 'rgba(255,255,255,0.1)';
+
+                      e.target.style.transform = 'translateY(0)';
+
+                    }}
+
+                  >
+
+                    <FontAwesomeIcon icon={icon} />
+
+                  </a>
+
+                ))}
+
               </div>
+
             </div>
+
+
+
             <div className="col-lg-2 col-md-3 mb-4">
-              <h6 className="fw-bold mb-3">Product</h6>
+
+              <h6 className="fw-bold mb-4" style={{ fontSize: '1.1rem' }}>Product</h6>
+
               <ul className="list-unstyled">
-                <li className="mb-2"><a href="#features" style={{ color: '#94a3b8' }} className="footer-link text-decoration-none">Features</a></li>
-                <li className="mb-2"><a href="#pricing" style={{ color: '#94a3b8' }} className="footer-link text-decoration-none">Pricing</a></li>
-                <li className="mb-2"><Link to="/contact" style={{ color: '#94a3b8' }} className="footer-link text-decoration-none">Request Demo</Link></li>
-                <li className="mb-2"><Link to="/pricing" style={{ color: '#94a3b8' }} className="footer-link text-decoration-none">Plans</Link></li>
-                <li className="mb-2"><a href="#testimonials" style={{ color: '#94a3b8' }} className="footer-link text-decoration-none">Testimonials</a></li>
+
+                {['Features', 'Pricing', 'Integrations', 'API Docs', 'Changelog'].map((item) => (
+
+                  <li className="mb-3" key={item}>
+
+                    <a href={`#${item.toLowerCase()}`} style={{ color: '#94a3b8', textDecoration: 'none', transition: 'all 0.3s ease' }}
+
+                      onMouseEnter={(e) => { e.target.style.color = '#667eea'; e.target.style.paddingLeft = '8px'; }}
+
+                      onMouseLeave={(e) => { e.target.style.color = '#94a3b8'; e.target.style.paddingLeft = '0'; }}
+
+                    >
+
+                      {item}
+
+                    </a>
+
+                  </li>
+
+                ))}
+
               </ul>
+
             </div>
+
+
+
             <div className="col-lg-2 col-md-3 mb-4">
-              <h6 className="fw-bold mb-3">Company</h6>
+
+              <h6 className="fw-bold mb-4" style={{ fontSize: '1.1rem' }}>Company</h6>
+
               <ul className="list-unstyled">
-                <li className="mb-2"><a href="#home" style={{ color: '#94a3b8' }} className="footer-link text-decoration-none">Home</a></li>
-                <li className="mb-2"><Link to="/contact" style={{ color: '#94a3b8' }} className="footer-link text-decoration-none">About Us</Link></li>
-                <li className="mb-2"><Link to="/contact" style={{ color: '#94a3b8' }} className="footer-link text-decoration-none">Careers</Link></li>
-                <li className="mb-2"><Link to="/contact" style={{ color: '#94a3b8' }} className="footer-link text-decoration-none">Support</Link></li>
-                <li className="mb-2"><Link to="/contact" style={{ color: '#94a3b8' }} className="footer-link text-decoration-none">Contact</Link></li>
+
+                {['About Us', 'Careers', 'Blog', 'Press Kit', 'Contact'].map((item) => (
+
+                  <li className="mb-3" key={item}>
+
+                    <a href={`#${item.toLowerCase().replace(' ', '-')}`} style={{ color: '#94a3b8', textDecoration: 'none', transition: 'all 0.3s ease' }}
+
+                      onMouseEnter={(e) => { e.target.style.color = '#667eea'; e.target.style.paddingLeft = '8px'; }}
+
+                      onMouseLeave={(e) => { e.target.style.color = '#94a3b8'; e.target.style.paddingLeft = '0'; }}
+
+                    >
+
+                      {item}
+
+                    </a>
+
+                  </li>
+
+                ))}
+
               </ul>
+
             </div>
-            <div className="col-lg-2 col-md-6 mb-4">
-              <h6 className="fw-bold mb-3">Resources</h6>
-              <ul className="list-unstyled">
-                <li className="mb-2"><a href="#help" style={{ color: '#94a3b8' }} className="footer-link text-decoration-none">Help Center</a></li>
-                <li className="mb-2"><a href="#blog" style={{ color: '#94a3b8' }} className="footer-link text-decoration-none">Blog</a></li>
-                <li className="mb-2"><a href="#guides" style={{ color: '#94a3b8' }} className="footer-link text-decoration-none">Implementation Guides</a></li>
-                <li className="mb-2"><a href="#api" style={{ color: '#94a3b8' }} className="footer-link text-decoration-none">API Docs</a></li>
-                <li className="mb-2"><a href="#webinars" style={{ color: '#94a3b8' }} className="footer-link text-decoration-none">Webinars</a></li>
-              </ul>
-            </div>
-            <div className="col-lg-3 col-md-6 mb-4">
-              <h6 className="fw-bold mb-3">Stay Connected</h6>
-              <p style={{ color: '#94a3b8' }}>Get the latest updates on new features, educational insights, and success stories.</p>
-              <form className="d-flex gap-2 mb-3">
-                <input type="email" className="form-control rounded-pill" placeholder="Your email" aria-label="Your email" style={{ background: '#1e293b', border: '1px solid #334155', color: 'white' }} />
-                <button className="btn btn-primary rounded-pill">Subscribe</button>
+
+
+
+            <div className="col-lg-4 col-md-6 mb-4">
+
+              <h6 className="fw-bold mb-4" style={{ fontSize: '1.1rem' }}>Stay Updated</h6>
+
+              <p style={{ color: '#94a3b8', lineHeight: 1.7 }}>
+
+                Get the latest updates on new features, educational insights, and success stories delivered to your inbox.
+
+              </p>
+
+              <form className="d-flex gap-2 mb-4">
+
+                <input
+
+                  type="email"
+
+                  className="form-control rounded-pill"
+
+                  placeholder="Enter your email"
+
+                  aria-label="Email address"
+
+                  style={{
+
+                    background: 'rgba(255,255,255,0.1)',
+
+                    border: '1px solid rgba(255,255,255,0.2)',
+
+                    color: 'white',
+
+                    padding: '12px 20px'
+
+                  }}
+
+                />
+
+                <button className="btn btn-primary rounded-pill px-4" style={{
+
+                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+
+                  border: 'none',
+
+                  fontWeight: '600',
+
+                  whiteSpace: 'nowrap'
+
+                }}>
+
+                  Subscribe
+
+                </button>
+
               </form>
-              <div className="d-flex align-items-center">
-                <FontAwesomeIcon icon={faEnvelope} className="me-2" style={{ color: '#94a3b8' }} />
-                <a href="mailto:hello@skoolweb.com" style={{ color: '#94a3b8' }} className="text-decoration-none">hello@skoolweb.com</a>
+
+              <div className="d-flex flex-column gap-2">
+
+                <div className="d-flex align-items-center">
+
+                  <FontAwesomeIcon icon={faEnvelope} className="me-3" style={{ color: '#94a3b8' }} />
+
+                  <a href="mailto:hello@skoolweb.com" style={{ color: '#94a3b8', textDecoration: 'none' }}>hello@skoolweb.com</a>
+
+                </div>
+
+                <div className="d-flex align-items-center">
+
+                  <FontAwesomeIcon icon={faPhone} className="me-3" style={{ color: '#94a3b8' }} />
+
+                  <span style={{ color: '#94a3b8' }}>+1 (555) 123-4567</span>
+
+                </div>
+
               </div>
-              <div className="d-flex align-items-center mt-2">
-                <FontAwesomeIcon icon={faPhone} className="me-2" style={{ color: '#94a3b8' }} />
-                <span style={{ color: '#94a3b8' }}>+1 (555) 123-4567</span>
-              </div>
+
             </div>
+
           </div>
-          <hr style={{ borderColor: '#273449' }} />
+
+
+
+          <hr style={{ borderColor: 'rgba(255,255,255,0.1)', margin: '40px 0' }} />
+
+
+
           <div className="row align-items-center">
-            <div className="col-md-6" style={{ color: '#94a3b8' }}>
-              <p className="mb-0">&copy; 2026 SKOOLWEB. All rights reserved.</p>
+
+            <div className="col-md-6 mb-3 mb-md-0">
+
+              <p className="mb-0" style={{ color: '#64748b', fontSize: '0.95rem' }}>
+
+                &copy; 2026 SKOOLWEB. All rights reserved. Made with ❤️ for educators.
+
+              </p>
+
             </div>
-            <div className="col-md-6 text-end">
-              <a href="#privacy" style={{ color: '#94a3b8' }} className="me-3 footer-link text-decoration-none">Privacy Policy</a>
-              <a href="#terms" style={{ color: '#94a3b8' }} className="me-3 footer-link text-decoration-none">Terms of Service</a>
-              <a href="#cookies" style={{ color: '#94a3b8' }} className="footer-link text-decoration-none">Cookie Policy</a>
+
+            <div className="col-md-6 text-md-end">
+
+              <a href="#privacy" style={{ color: '#64748b', textDecoration: 'none', marginRight: '20px', fontSize: '0.95rem' }}>Privacy Policy</a>
+
+              <a href="#terms" style={{ color: '#64748b', textDecoration: 'none', marginRight: '20px', fontSize: '0.95rem' }}>Terms of Service</a>
+
+              <a href="#cookies" style={{ color: '#64748b', textDecoration: 'none', fontSize: '0.95rem' }}>Cookie Policy</a>
+
             </div>
+
           </div>
+
         </div>
+
       </footer>
+
     </div>
+
   );
+
 };
 
-export default LandingPage;
+
+
+export default LandingPage; 

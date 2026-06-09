@@ -289,6 +289,27 @@ body {
   background-color: #f7fafc;
 }
 
+/* Custom Color Utilities (for Dashboard cards) */
+.bg-purple {
+  background-color: #764ba2 !important;
+}
+.text-purple {
+  color: #764ba2 !important;
+}
+.bg-purple.bg-opacity-10 {
+  background-color: rgba(118, 75, 162, 0.1) !important;
+}
+
+.bg-pink {
+  background-color: #f093fb !important;
+}
+.text-pink {
+  color: #f093fb !important;
+}
+.bg-pink.bg-opacity-10 {
+  background-color: rgba(240, 147, 251, 0.1) !important;
+}
+
 /* Floating Elements */
 .floating-shape {
   position: absolute;
