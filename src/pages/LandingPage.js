@@ -2553,34 +2553,39 @@ const LandingPage = () => {
 
 
             <div className="col-lg-2 col-md-3 mb-4">
-
-              <h6 className="fw-bold mb-4" style={{ fontSize: '1.1rem' }}>Company</h6>
-
-              <ul className="list-unstyled">
-
-                {['About Us', 'Careers', 'Blog', 'Press Kit', 'Contact'].map((item) => (
-
-                  <li className="mb-3" key={item}>
-
-                    <a href={`#${item.toLowerCase().replace(' ', '-')}`} style={{ color: '#94a3b8', textDecoration: 'none', transition: 'all 0.3s ease' }}
-
-                      onMouseEnter={(e) => { e.target.style.color = '#667eea'; e.target.style.paddingLeft = '8px'; }}
-
-                      onMouseLeave={(e) => { e.target.style.color = '#94a3b8'; e.target.style.paddingLeft = '0'; }}
-
-                    >
-
-                      {item}
-
-                    </a>
-
-                  </li>
-
-                ))}
-
-              </ul>
-
-            </div>
+  <h6 className="fw-bold mb-4" style={{ fontSize: '1.1rem' }}>Company</h6>
+  <ul className="list-unstyled">
+    {['About Us', 'Careers', 'Blog', 'Press Kit', 'Contact'].map((item) => (
+      <li className="mb-3" key={item}>
+        <button 
+          onClick={() => {
+            if (item === 'About Us') {
+              window.location.href = window.location.origin + window.location.pathname; // रूट यूआरएल पर ले जाएगा
+            } else {
+              // बाकी लिंक्स पुराने तरीके से काम करेंगे
+              const element = document.getElementById(item.toLowerCase().replace(' ', '-'));
+              if (element) element.scrollIntoView({ behavior: 'smooth' });
+            }
+          }} 
+          style={{ 
+            color: '#94a3b8', 
+            textDecoration: 'none', 
+            transition: 'all 0.3s ease',
+            background: 'none',
+            border: 'none',
+            padding: 0,
+            cursor: 'pointer',
+            textAlign: 'left'
+          }}
+          onMouseEnter={(e) => { e.target.style.color = '#667eea'; e.target.style.paddingLeft = '8px'; }}
+          onMouseLeave={(e) => { e.target.style.color = '#94a3b8'; e.target.style.paddingLeft = '0'; }}
+        >
+          {item}
+        </button>
+      </li>
+    ))}
+  </ul>
+</div>
 
 
 
