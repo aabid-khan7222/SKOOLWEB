@@ -3,12 +3,8 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faCalendarAlt, faUsers, faClock, faCheckCircle, faEnvelope, 
-  faPhone, faMapMarkerAlt, faStar, faBars, faHome, faChartLine, faHeadset
+  faPhone, faMapMarkerAlt, faStar, faBars, faHome
 } from '@fortawesome/free-solid-svg-icons';
-
-// 🆕 Firebase के आवश्यक फंक्शन्स और आपके द्वारा बनाए गए 'db' को इम्पोर्ट किया
-import { db } from './firebase'; // सुनिश्चित करें कि firebase.js फाइल का पाथ सही हो
-import { ref, push } from 'firebase/database';
 
 const ContactUs = () => {
   const [formData, setFormData] = useState({
@@ -16,49 +12,24 @@ const ContactUs = () => {
     currentSystem: '', preferredTime: '', message: ''
   });
   const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false); // 🆕 सबमिशन के दौरान लोडस्टेट के लिए
 
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // 🆕 फॉर्म सबमिट होने पर Firebase में डेटा भेजने का फंक्शन
-  const handleSubmit = async (event) => {
+  // 🆕 Firebase हटाकर साधारण सबमिट फंक्शन रखा है जो सिर्फ सक्सेस स्क्रीन दिखाता है
+  const handleSubmit = (event) => {
     event.preventDefault();
-    setLoading(true);
-
-    try {
-      // 1. आज की रियल-टाइम तारीख और समय निकालना
-      const currentDateTime = new Date();
-      const formattedDate = currentDateTime.toLocaleDateString('en-IN'); // DD/MM/YYYY Format
-      const formattedTime = currentDateTime.toLocaleTimeString('en-IN'); // HH:MM:SS AM/PM Format
-      const timestamp = currentDateTime.getTime(); // सॉर्टिंग के लिए मिलिसेकंड्स
-
-      // 2. सेव होने वाले डेटा का ऑब्जेक्ट तैयार करना (रियल टाइम डेट के साथ)
-      const dataToSave = {
-        ...formData,
-        submittedDate: formattedDate,
-        submittedTime: formattedTime,
-        timestamp: timestamp
-      };
-
-      // 3. Firebase Realtime Database में 'demo_requests' नोड के अंदर पुश करना
-      const demoRequestsRef = ref(db, 'demo_requests');
-      await push(demoRequestsRef, dataToSave);
-
-      // 4. सक्सेस होने पर स्टेट्स अपडेट करना
-      setSubmitted(true);
-      setFormData({ // फॉर्म रीसेट करना
-        name: '', email: '', mobile: '', school: '', role: '', schoolSize: '',
-        currentSystem: '', preferredTime: '', message: ''
-      });
-    } catch (error) {
-      console.error("Firebase में डेटा सेव करने में एरर आया: ", error);
-      alert("कुछ गड़बड़ हुई! कृपया दोबारा प्रयास करें।");
-    } finally {
-      setLoading(false);
-    }
+    
+    // फॉर्म सक्सेस स्क्रीन दिखाने के लिए स्टेट अपडेट
+    setSubmitted(true);
+    
+    // फॉर्म रीसेट करना
+    setFormData({
+      name: '', email: '', mobile: '', school: '', role: '', schoolSize: '',
+      currentSystem: '', preferredTime: '', message: ''
+    });
   };
 
   return (
@@ -220,22 +191,22 @@ const ContactUs = () => {
                     <div className="row">
                       <div className="col-md-6 mb-4">
                         <label className="form-label fw-bold">Full Name *</label>
-                        <input name="name" value={formData.name} onChange={handleChange} className="form-control rounded-pill py-2" placeholder="Your full name" required disabled={loading} />
+                        <input name="name" value={formData.name} onChange={handleChange} className="form-control rounded-pill py-2" placeholder="Your full name" required />
                       </div>
                       <div className="col-md-6 mb-4">
                         <label className="form-label fw-bold">Email Address *</label>
-                        <input name="email" type="email" value={formData.email} onChange={handleChange} className="form-control rounded-pill py-2" placeholder="you@school.edu" required disabled={loading} />
+                        <input name="email" type="email" value={formData.email} onChange={handleChange} className="form-control rounded-pill py-2" placeholder="you@school.edu" required />
                       </div>
                     </div>
 
                     <div className="row">
                       <div className="col-md-6 mb-4">
                         <label className="form-label fw-bold">Phone Number</label>
-                        <input name="mobile" type="tel" value={formData.mobile} onChange={handleChange} className="form-control rounded-pill py-2" placeholder="+1 (555) 123-4567" disabled={loading} />
+                        <input name="mobile" type="tel" value={formData.mobile} onChange={handleChange} className="form-control rounded-pill py-2" placeholder="+1 (555) 123-4567" />
                       </div>
                       <div className="col-md-6 mb-4">
                         <label className="form-label fw-bold">Your Role *</label>
-                        <select name="role" value={formData.role} onChange={handleChange} className="form-select rounded-pill py-2" required disabled={loading}>
+                        <select name="role" value={formData.role} onChange={handleChange} className="form-select rounded-pill py-2" required>
                           <option value="">Select your role</option>
                           <option value="principal">Principal</option>
                           <option value="vice-principal">Vice Principal</option>
@@ -249,13 +220,13 @@ const ContactUs = () => {
 
                     <div className="mb-4">
                       <label className="form-label fw-bold">School / Institution Name *</label>
-                      <input name="school" value={formData.school} onChange={handleChange} className="form-control rounded-pill py-2" placeholder="School name" required disabled={loading} />
+                      <input name="school" value={formData.school} onChange={handleChange} className="form-control rounded-pill py-2" placeholder="School name" required />
                     </div>
 
                     <div className="row">
                       <div className="col-md-6 mb-4">
                         <label className="form-label fw-bold">School Size</label>
-                        <select name="schoolSize" value={formData.schoolSize} onChange={handleChange} className="form-select rounded-pill py-2" disabled={loading}>
+                        <select name="schoolSize" value={formData.schoolSize} onChange={handleChange} className="form-select rounded-pill py-2">
                           <option value="">Select school size</option>
                           <option value="small">Small (1-500 students)</option>
                           <option value="medium">Medium (501-2000 students)</option>
@@ -264,13 +235,13 @@ const ContactUs = () => {
                       </div>
                       <div className="col-md-6 mb-4">
                         <label className="form-label fw-bold">Current System</label>
-                        <input name="currentSystem" value={formData.currentSystem} onChange={handleChange} className="form-control rounded-pill py-2" placeholder="What system do you currently use?" disabled={loading} />
+                        <input name="currentSystem" value={formData.currentSystem} onChange={handleChange} className="form-control rounded-pill py-2" placeholder="What system do you currently use?" />
                       </div>
                     </div>
 
                     <div className="mb-4">
                       <label className="form-label fw-bold">Preferred Demo Time</label>
-                      <select name="preferredTime" value={formData.preferredTime} onChange={handleChange} className="form-select rounded-pill py-2" disabled={loading}>
+                      <select name="preferredTime" value={formData.preferredTime} onChange={handleChange} className="form-select rounded-pill py-2">
                         <option value="">Select preferred time</option>
                         <option value="morning">Morning (9 AM - 12 PM)</option>
                         <option value="afternoon">Afternoon (12 PM - 5 PM)</option>
@@ -280,13 +251,12 @@ const ContactUs = () => {
 
                     <div className="mb-4">
                       <label className="form-label fw-bold">Additional Information</label>
-                      <textarea name="message" value={formData.message} onChange={handleChange} className="form-control rounded-4 py-3" rows="4" placeholder="Tell us about your specific needs, challenges, or questions..." disabled={loading} />
+                      <textarea name="message" value={formData.message} onChange={handleChange} className="form-control rounded-4 py-3" rows="4" placeholder="Tell us about your specific needs, challenges, or questions..." />
                     </div>
 
-                    {/* Button Text Loader के साथ अपडेट किया */}
-                    <button type="submit" className="btn btn-primary btn-lg w-100 rounded-pill fw-bold py-3 shadow-sm" disabled={loading}>
+                    <button type="submit" className="btn btn-primary btn-lg w-100 rounded-pill fw-bold py-3 shadow-sm">
                       <FontAwesomeIcon icon={faCalendarAlt} className="me-2" />
-                      {loading ? "Submitting Request..." : "Request Free Demo"}
+                      Request Free Demo
                     </button>
 
                     <p className="text-muted text-center mt-3 small">
