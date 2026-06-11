@@ -273,44 +273,29 @@ const ContactUs = () => {
       {/* Professional Footer */}
       <footer className="bg-dark text-light py-5 mt-auto">
         <div className="container">
-          <div className="row g-4">
-            <div className="col-lg-4">
+          <div className="row g-4 justify-content-center">
+            <div className="col-lg-4 col-md-6 text-center text-md-start">
               <h5 className="fw-bold mb-3">SKOOLWEB</h5>
-              <p className="text-secondary small mb-4">Empowering schools worldwide with next-generation administrative solutions for better academic outcomes and seamless parent communication.</p>
+              <p className="text-secondary small mb-0">Empowering schools worldwide with next-generation administrative solutions for better academic outcomes and seamless parent communication.</p>
             </div>
-            <div className="col-lg-2">
+            <div className="col-lg-2 col-md-3 text-center text-md-start">
               <h6 className="fw-bold mb-3">Product</h6>
               <ul className="list-unstyled text-secondary small">
-                <li className="mb-2"><Link to="#" className="text-light text-decoration-none">Features</Link></li>
-                <li className="mb-2"><Link to="#" className="text-light text-decoration-none">Integrations</Link></li>
-                <li><Link to="#" className="text-light text-decoration-none">Security</Link></li>
+                <li className="mb-2"><Link to="/" className="text-light text-decoration-none">Features</Link></li>
+                <li><Link to="/pricing" className="text-light text-decoration-none">Pricing</Link></li>
               </ul>
             </div>
-            <div className="col-lg-2">
+            <div className="col-lg-2 col-md-3 text-center text-md-start">
               <h6 className="fw-bold mb-3">Company</h6>
               <ul className="list-unstyled text-secondary small">
-                <li className="mb-2"><Link to="#" className="text-light text-decoration-none">About Us</Link></li>
-                <li className="mb-2"><Link to="#" className="text-light text-decoration-none">Careers</Link></li>
-                <li><Link to="#" className="text-light text-decoration-none">Contact</Link></li>
+                <li><Link to="/contact" className="text-light text-decoration-none">Contact</Link></li>
               </ul>
-            </div>
-            <div className="col-lg-4">
-              <h6 className="fw-bold mb-3">Stay Updated</h6>
-              <div className="input-group">
-                <input type="email" className="form-control rounded-pill py-2" placeholder="Enter your email" />
-                <button className="btn btn-primary rounded-pill px-4">Join</button>
-              </div>
-              <small className="text-secondary d-block mt-2">Get updates on new features and school success stories.</small>
             </div>
           </div>
           <hr className="my-4 opacity-25" />
-          <div className="row align-items-center">
-            <div className="col-md-6">
-              <p className="text-secondary small mb-0">&copy; 2026 SKOOLWEB Technologies. All rights reserved.</p>
-            </div>
-            <div className="col-md-6 text-md-end">
-              <Link to="#" className="text-secondary small me-3">Privacy Policy</Link>
-              <Link to="#" className="text-secondary small">Terms of Service</Link>
+          <div className="row align-items-center justify-content-center text-center">
+            <div className="col-12">
+              <p className="text-secondary small mb-0">&copy; 2026 SKOOLWEB. All rights reserved.</p>
             </div>
           </div>
         </div>

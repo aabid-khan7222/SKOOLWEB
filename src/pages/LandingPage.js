@@ -4,11 +4,7 @@ import { Link } from 'react-router-dom';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { faStar, faCheck, faCheckCircle, faUsers, faBookOpen, faClipboardList, faChartLine, faCalendarAlt, faBullhorn, faBell, faArrowRight, faClock, faTrophy, faLightbulb, faDesktop, faEnvelope, faPhone, faPlay, faRocket, faShieldAlt, faGlobe, faChevronDown, faChevronUp, faAward, faGraduationCap, faChalkboardTeacher, faSchool, faFileAlt, faMoneyBillWave, faCog, faMobileAlt, faCloud, faLock, faHeadset, faHandshake, faMagic, faZap, faSync, faChartPie, faUserFriends, faLaptopCode, faPalette, faLayerGroup, faThumbsUp, faQuoteLeft, faChevronRight, faCircle, faDotCircle } from '@fortawesome/free-solid-svg-icons';
-
-import { faTwitter, faLinkedin, faFacebook, faInstagram, faYoutube, faGithub, faDribbble, faSlack } from '@fortawesome/free-brands-svg-icons';
-
-
+import { faStar, faCheck, faCheckCircle, faUsers, faBookOpen, faClipboardList, faChartLine, faCalendarAlt, faBullhorn, faBell, faArrowRight, faClock, faTrophy, faLightbulb, faDesktop, faPlay, faRocket, faShieldAlt, faGlobe, faChevronDown, faChevronUp, faAward, faGraduationCap, faChalkboardTeacher, faSchool, faFileAlt, faMoneyBillWave, faCog, faMobileAlt, faCloud, faLock, faHeadset, faHandshake, faMagic, faZap, faSync, faChartPie, faUserFriends, faLaptopCode, faPalette, faLayerGroup, faThumbsUp, faQuoteLeft, faChevronRight, faCircle, faDotCircle } from '@fortawesome/free-solid-svg-icons';
 
 const LandingPage = () => {
 
@@ -888,7 +884,7 @@ const LandingPage = () => {
 
                   <FontAwesomeIcon icon={faZap} className="me-2" />
 
-                  AI-Powered School Management Platform
+                  All-in-One School Management Platform
 
                 </span>
 
@@ -1356,7 +1352,7 @@ const LandingPage = () => {
 
                       <h5 className="fw-bold mb-1">Welcome to SKOOLWEB</h5>
 
-                      <p className="text-muted small mb-0">Your AI-powered school management assistant</p>
+                      <p className="text-muted small mb-0">Your complete school management solution</p>
 
                     </div>
 
@@ -1502,7 +1498,7 @@ const LandingPage = () => {
 
                 title: 'Smart Scheduling',
 
-                desc: 'AI-powered timetable generation, resource booking, and automatic conflict resolution.',
+                desc: 'Automated timetable generation, resource booking, and smart conflict resolution.',
 
                 color: '#4facfe',
 
@@ -2002,7 +1998,7 @@ const LandingPage = () => {
 
                 school: 'Westfield Academy',
 
-                text: 'SKOOLWEB completely transformed how we manage our school. The interface is intuitive, and the AI features save us hours every week. Parent satisfaction has increased by 40%.',
+                text: 'SKOOLWEB completely transformed how we manage our school. The interface is intuitive, and the automated workflows save us hours every week. Parent satisfaction has increased by 40%.',
 
                 avatar: 'SJ',
 
@@ -2288,11 +2284,11 @@ const LandingPage = () => {
 
         <div className="container">
 
-          <div className="row mb-5">
+          <div className="row mb-5 justify-content-center">
 
-            <div className="col-lg-4 col-md-6 mb-4">
+            <div className="col-lg-4 col-md-6 mb-4 text-center text-md-start">
 
-              <div className="d-flex align-items-center mb-4">
+              <div className="d-flex align-items-center mb-4 justify-content-center justify-content-md-start">
 
                 <div style={{
 
@@ -2330,85 +2326,47 @@ const LandingPage = () => {
 
               </p>
 
-              <div className="d-flex gap-3 mt-4">
-
-                {[faTwitter, faLinkedin, faFacebook, faInstagram, faYoutube].map((icon, idx) => (
-
-                  <a key={idx} href="#social" className="text-white" style={{
-
-                    width: '40px',
-
-                    height: '40px',
-
-                    borderRadius: '10px',
-
-                    background: 'rgba(255,255,255,0.1)',
-
-                    display: 'flex',
-
-                    alignItems: 'center',
-
-                    justifyContent: 'center',
-
-                    transition: 'all 0.3s ease'
-
-                  }}
-
-                    onMouseEnter={(e) => {
-
-                      e.target.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
-
-                      e.target.style.transform = 'translateY(-3px)';
-
-                    }}
-
-                    onMouseLeave={(e) => {
-
-                      e.target.style.background = 'rgba(255,255,255,0.1)';
-
-                      e.target.style.transform = 'translateY(0)';
-
-                    }}
-
-                  >
-
-                    <FontAwesomeIcon icon={icon} />
-
-                  </a>
-
-                ))}
-
-              </div>
-
             </div>
 
 
 
-            <div className="col-lg-2 col-md-3 mb-4">
+            <div className="col-lg-2 col-md-3 mb-4 text-center text-md-start">
 
               <h6 className="fw-bold mb-4" style={{ fontSize: '1.1rem' }}>Product</h6>
 
               <ul className="list-unstyled">
 
-                {['Features', 'Pricing', 'Integrations', 'API Docs', 'Changelog'].map((item) => (
+                <li className="mb-3">
 
-                  <li className="mb-3" key={item}>
+                  <a href="#features" style={{ color: '#94a3b8', textDecoration: 'none', transition: 'all 0.3s ease' }}
 
-                    <a href={`#${item.toLowerCase()}`} style={{ color: '#94a3b8', textDecoration: 'none', transition: 'all 0.3s ease' }}
+                    onMouseEnter={(e) => { e.target.style.color = '#667eea'; }}
 
-                      onMouseEnter={(e) => { e.target.style.color = '#667eea'; e.target.style.paddingLeft = '8px'; }}
+                    onMouseLeave={(e) => { e.target.style.color = '#94a3b8'; }}
 
-                      onMouseLeave={(e) => { e.target.style.color = '#94a3b8'; e.target.style.paddingLeft = '0'; }}
+                  >
 
-                    >
+                    Features
 
-                      {item}
+                  </a>
 
-                    </a>
+                </li>
 
-                  </li>
+                <li className="mb-3">
 
-                ))}
+                  <Link to="/pricing" style={{ color: '#94a3b8', textDecoration: 'none', transition: 'all 0.3s ease' }}
+
+                    onMouseEnter={(e) => { e.target.style.color = '#667eea'; }}
+
+                    onMouseLeave={(e) => { e.target.style.color = '#94a3b8'; }}
+
+                  >
+
+                    Pricing
+
+                  </Link>
+
+                </li>
 
               </ul>
 
@@ -2416,116 +2374,29 @@ const LandingPage = () => {
 
 
 
-            <div className="col-lg-2 col-md-3 mb-4">
-  <h6 className="fw-bold mb-4" style={{ fontSize: '1.1rem' }}>Company</h6>
-  <ul className="list-unstyled">
-    {['About Us', 'Careers', 'Blog', 'Press Kit', 'Contact'].map((item) => (
-      <li className="mb-3" key={item}>
-        <button 
-          onClick={() => {
-            if (item === 'About Us') {
-              window.location.href = window.location.origin + window.location.pathname; // रूट यूआरएल पर ले जाएगा
-            } else {
-              // बाकी लिंक्स पुराने तरीके से काम करेंगे
-              const element = document.getElementById(item.toLowerCase().replace(' ', '-'));
-              if (element) element.scrollIntoView({ behavior: 'smooth' });
-            }
-          }} 
-          style={{ 
-            color: '#94a3b8', 
-            textDecoration: 'none', 
-            transition: 'all 0.3s ease',
-            background: 'none',
-            border: 'none',
-            padding: 0,
-            cursor: 'pointer',
-            textAlign: 'left'
-          }}
-          onMouseEnter={(e) => { e.target.style.color = '#667eea'; e.target.style.paddingLeft = '8px'; }}
-          onMouseLeave={(e) => { e.target.style.color = '#94a3b8'; e.target.style.paddingLeft = '0'; }}
-        >
-          {item}
-        </button>
-      </li>
-    ))}
-  </ul>
-</div>
+            <div className="col-lg-2 col-md-3 mb-4 text-center text-md-start">
 
+              <h6 className="fw-bold mb-4" style={{ fontSize: '1.1rem' }}>Company</h6>
 
+              <ul className="list-unstyled">
 
-            <div className="col-lg-4 col-md-6 mb-4">
+                <li className="mb-3">
 
-              <h6 className="fw-bold mb-4" style={{ fontSize: '1.1rem' }}>Stay Updated</h6>
+                  <Link to="/contact" style={{ color: '#94a3b8', textDecoration: 'none', transition: 'all 0.3s ease' }}
 
-              <p style={{ color: '#94a3b8', lineHeight: 1.7 }}>
+                    onMouseEnter={(e) => { e.target.style.color = '#667eea'; }}
 
-                Get the latest updates on new features, educational insights, and success stories delivered to your inbox.
+                    onMouseLeave={(e) => { e.target.style.color = '#94a3b8'; }}
 
-              </p>
+                  >
 
-              <form className="d-flex gap-2 mb-4">
+                    Contact
 
-                <input
+                  </Link>
 
-                  type="email"
+                </li>
 
-                  className="form-control rounded-pill"
-
-                  placeholder="Enter your email"
-
-                  aria-label="Email address"
-
-                  style={{
-
-                    background: 'rgba(255,255,255,0.1)',
-
-                    border: '1px solid rgba(255,255,255,0.2)',
-
-                    color: 'white',
-
-                    padding: '12px 20px'
-
-                  }}
-
-                />
-
-                <button className="btn btn-primary rounded-pill px-4" style={{
-
-                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-
-                  border: 'none',
-
-                  fontWeight: '600',
-
-                  whiteSpace: 'nowrap'
-
-                }}>
-
-                  Subscribe
-
-                </button>
-
-              </form>
-
-              <div className="d-flex flex-column gap-2">
-
-                <div className="d-flex align-items-center">
-
-                  <FontAwesomeIcon icon={faEnvelope} className="me-3" style={{ color: '#94a3b8' }} />
-
-                  <a href="mailto:hello@skoolweb.com" style={{ color: '#94a3b8', textDecoration: 'none' }}>hello@skoolweb.com</a>
-
-                </div>
-
-                <div className="d-flex align-items-center">
-
-                  <FontAwesomeIcon icon={faPhone} className="me-3" style={{ color: '#94a3b8' }} />
-
-                  <span style={{ color: '#94a3b8' }}>+1 (555) 123-4567</span>
-
-                </div>
-
-              </div>
+              </ul>
 
             </div>
 
@@ -2537,25 +2408,15 @@ const LandingPage = () => {
 
 
 
-          <div className="row align-items-center">
+          <div className="row align-items-center justify-content-center text-center">
 
-            <div className="col-md-6 mb-3 mb-md-0">
+            <div className="col-12">
 
               <p className="mb-0" style={{ color: '#64748b', fontSize: '0.95rem' }}>
 
-                &copy; 2026 SKOOLWEB. All rights reserved. Made with ❤️ for educators.
+                &copy; 2026 SKOOLWEB. All rights reserved.
 
               </p>
-
-            </div>
-
-            <div className="col-md-6 text-md-end">
-
-              <a href="#privacy" style={{ color: '#64748b', textDecoration: 'none', marginRight: '20px', fontSize: '0.95rem' }}>Privacy Policy</a>
-
-              <a href="#terms" style={{ color: '#64748b', textDecoration: 'none', marginRight: '20px', fontSize: '0.95rem' }}>Terms of Service</a>
-
-              <a href="#cookies" style={{ color: '#64748b', textDecoration: 'none', fontSize: '0.95rem' }}>Cookie Policy</a>
 
             </div>
 
