@@ -1,28 +1,69 @@
 import React, { useEffect, useState, useRef } from 'react';
 
 import { Link } from 'react-router-dom';
+import SiteFooter from '../components/SiteFooter';
+import DemoRequestSection from '../components/DemoRequestSection';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { faStar, faCheck, faCheckCircle, faUsers, faBookOpen, faClipboardList, faChartLine, faCalendarAlt, faBullhorn, faBell, faArrowRight, faClock, faTrophy, faLightbulb, faDesktop, faPlay, faRocket, faShieldAlt, faGlobe, faChevronDown, faChevronUp, faAward, faGraduationCap, faChalkboardTeacher, faSchool, faFileAlt, faMoneyBillWave, faCog, faMobileAlt, faCloud, faLock, faHeadset, faHandshake, faMagic, faZap, faSync, faChartPie, faUserFriends, faLaptopCode, faPalette, faLayerGroup, faThumbsUp, faQuoteLeft, faChevronRight, faCircle, faDotCircle } from '@fortawesome/free-solid-svg-icons';
 
+const API_BASE = (process.env.REACT_APP_API_BASE_URL || '').replace(/\/$/, '');
+const SCHOOL_HOME_PAGE_API = `${API_BASE}/api/public/school-home-page`;
+const FUTURISTIC5_URL = 'https://www.futuristic5.com/';
+
+const buildStatsMap = (stats) => {
+  if (!stats) return {};
+
+  if (Array.isArray(stats)) {
+    return stats.reduce((acc, item) => {
+      const label = item?.label || item?.title || item?.name;
+      const value = item?.value ?? item?.display ?? item?.count;
+      if (label != null && value != null && value !== '') {
+        acc[String(label).trim()] = String(value);
+      }
+      return acc;
+    }, {});
+  }
+
+  if (typeof stats === 'object') {
+    const labelByKey = {
+      totalStudents: 'Total Students',
+      attendanceRate: 'Attendance Rate',
+      activeUsers: 'Active Users',
+      uptimeGuarantee: 'Uptime Guarantee',
+      totalSubjects: 'Total Subjects',
+      totalReports: 'Total Reports',
+    };
+
+    return Object.entries(stats).reduce((acc, [key, item]) => {
+      const label = labelByKey[key] || item?.label || item?.title || key;
+      const value = typeof item === 'object' && item !== null
+        ? item?.value ?? item?.display ?? item?.count
+        : item;
+      if (label && value != null && value !== '') {
+        acc[String(label).trim()] = String(value);
+      }
+      return acc;
+    }, {});
+  }
+
+  return {};
+};
+
 const LandingPage = () => {
 
   const [isVisible, setIsVisible] = useState(false);
 
-  const [scrollY, setScrollY] = useState(0);
-
-  const [activeSection, setActiveSection] = useState('home');
-
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
  
 
   // फीचर्स को इन-प्लेस पॉपअप में दिखाने के लिए स्टेट
 
   const [expandedPlans, setExpandedPlans] = useState({});
+
+  const [statsMap, setStatsMap] = useState({});
 
 
 
@@ -46,45 +87,35 @@ const LandingPage = () => {
 
   };
 
+  const getStat = (label) => statsMap[label] || '—';
+
+
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    fetch(SCHOOL_HOME_PAGE_API, { signal: controller.signal })
+      .then((res) => res.json())
+      .then((result) => {
+        const stats = result?.success ? result?.data?.content?.stats : null;
+        if (stats) {
+          setStatsMap(buildStatsMap(stats));
+        }
+      })
+      .catch((err) => {
+        if (err.name !== 'AbortError') {
+          console.error('School home page API:', err.message);
+        }
+      });
+
+    return () => controller.abort();
+  }, []);
+
 
 
   useEffect(() => {
 
     setIsVisible(true);
-
-
-
-    const handleScroll = () => {
-
-      setScrollY(window.scrollY);
-
-     
-
-      // Update active section based on scroll position
-
-      const sections = ['home', 'features', 'pricing', 'testimonials', 'contact'];
-
-      for (const section of sections) {
-
-        const element = document.getElementById(section);
-
-        if (element) {
-
-          const rect = element.getBoundingClientRect();
-
-          if (rect.top <= 100 && rect.bottom >= 100) {
-
-            setActiveSection(section);
-
-            break;
-
-          }
-
-        }
-
-      }
-
-    };
 
 
 
@@ -96,13 +127,9 @@ const LandingPage = () => {
 
 
 
-    window.addEventListener('scroll', handleScroll);
-
     window.addEventListener('mousemove', handleMouseMove);
 
     return () => {
-
-      window.removeEventListener('scroll', handleScroll);
 
       window.removeEventListener('mousemove', handleMouseMove);
 
@@ -452,6 +479,18 @@ const LandingPage = () => {
 
 
 
+        .btn-pro.btn-outline-light:hover {
+
+          background: #fff !important;
+
+          color: #667eea !important;
+
+          border-color: #fff !important;
+
+        }
+
+
+
         .card-pro {
 
           background: white;
@@ -572,6 +611,62 @@ const LandingPage = () => {
 
         }
 
+
+
+        .hero-text-col {
+
+          position: relative;
+
+          z-index: 2;
+
+        }
+
+
+
+        .hero-visual-col {
+
+          position: relative;
+
+          z-index: 1;
+
+        }
+
+
+
+        .hero-mockup-wrap {
+
+          width: 100%;
+
+          max-width: 540px;
+
+          margin-left: auto;
+
+          margin-right: auto;
+
+        }
+
+
+
+        @media (min-width: 1400px) {
+
+          .hero-mockup-wrap {
+
+            margin-right: 0;
+
+          }
+
+        }
+
+
+
+        #home .hero-headline {
+
+          font-size: clamp(2rem, 3.2vw, 3.75rem);
+
+          line-height: 1.12;
+
+        }
+
       `}</style>
 
 
@@ -579,178 +674,6 @@ const LandingPage = () => {
       {/* Noise Texture Overlay */}
 
       <div className="noise-overlay"></div>
-
-
-
-      {/* Header */}
-
-      <header className={`sticky-top transition-all ${scrollY > 50 ? 'scrolled' : ''}`} style={{
-
-        background: scrollY > 50 ? 'rgba(255, 255, 255, 0.95)' : 'transparent',
-
-        backdropFilter: scrollY > 50 ? 'blur(20px)' : 'none',
-
-        borderBottom: scrollY > 50 ? '1px solid rgba(99, 102, 241, 0.1)' : 'none',
-
-        boxShadow: scrollY > 50 ? '0 10px 30px rgba(0, 0, 0, 0.1)' : 'none',
-
-        transition: 'all 0.3s ease',
-
-        zIndex: 1000
-
-      }}>
-
-        <div className="container">
-
-          <nav className="navbar navbar-expand-lg">
-
-            <Link className="navbar-brand fw-bold d-flex align-items-center" to="/">
-
-              <div style={{
-
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-
-                width: '48px',
-
-                height: '48px',
-
-                borderRadius: '16px',
-
-                display: 'flex',
-
-                alignItems: 'center',
-
-                justifyContent: 'center',
-
-                color: 'white',
-
-                marginRight: '12px',
-
-                fontSize: '22px',
-
-                fontWeight: '900',
-
-                boxShadow: '0 8px 20px rgba(99, 102, 241, 0.3)',
-
-                animation: 'pulse2 2s infinite'
-
-              }}>SK</div>
-
-              <span className="gradient-text-pro" style={{ fontSize: '1.5rem', fontWeight: '900' }}>SKOOLWEB</span>
-
-            </Link>
-
-           
-
-            <button className="navbar-toggler" type="button" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-
-              <span className="navbar-toggler-icon"></span>
-
-            </button>
-
-           
-
-            <div className={`collapse navbar-collapse ${isMenuOpen ? 'show' : ''}`} id="navbarNav">
-
-              <ul className="navbar-nav ms-auto align-items-center">
-
-                {['Home', 'Features', 'Pricing', 'Testimonials'].map((item) => (
-
-                  <li className="nav-item" key={item}>
-
-                    <a
-
-                      className={`nav-link fw-500 px-3 ${activeSection === item.toLowerCase() ? 'active text-primary' : ''}`}
-
-                      href={`#${item.toLowerCase()}`}
-
-                      style={{
-
-                        position: 'relative',
-
-                        transition: 'all 0.3s ease',
-
-                        color: activeSection === item.toLowerCase() ? '#667eea' : '#64748b'
-
-                      }}
-
-                    >
-
-                      {item}
-
-                      {activeSection === item.toLowerCase() && (
-
-                        <span style={{
-
-                          position: 'absolute',
-
-                          bottom: '-2px',
-
-                          left: '50%',
-
-                          transform: 'translateX(-50%)',
-
-                          width: '20px',
-
-                          height: '3px',
-
-                          background: 'linear-gradient(90deg, #667eea, #764ba2)',
-
-                          borderRadius: '2px'
-
-                        }}></span>
-
-                      )}
-
-                    </a>
-
-                  </li>
-
-                ))}
-
-                <li className="nav-item">
-
-                  <Link to="/contact" className="nav-link fw-500 px-3" style={{ color: '#64748b' }}>Contact</Link>
-
-                </li>
-
-                <li className="nav-item ms-2">
-
-                  <Link to="/contact" className="btn btn-pro btn-primary px-4 py-2 rounded-pill" style={{
-
-                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-
-                    border: 'none',
-
-                    color: 'white',
-
-                    fontWeight: '600',
-
-                    padding: '12px 28px',
-
-                    borderRadius: '50px',
-
-                    boxShadow: '0 10px 30px rgba(99, 102, 241, 0.3)'
-
-                  }}>
-
-                    <FontAwesomeIcon icon={faRocket} className="me-2" />
-
-                    Request Demo
-
-                  </Link>
-
-                </li>
-
-              </ul>
-
-            </div>
-
-          </nav>
-
-        </div>
-
-      </header>
 
 
 
@@ -770,7 +693,7 @@ const LandingPage = () => {
 
     minHeight: '100vh',
 
-    paddingTop: '120px',
+    paddingTop: 'calc(80px + 2rem)',
 
     paddingBottom: '80px',
 
@@ -852,9 +775,9 @@ const LandingPage = () => {
 
         <div className="container position-relative" style={{ zIndex: 2 }}>
 
-          <div className="row align-items-center min-vh-75">
+          <div className="row align-items-start gx-4 gx-xxl-5 py-2">
 
-            <div className={`col-lg-6 ${isVisible ? 'animate-in' : ''}`} style={{
+            <div className={`col-12 col-xxl-6 hero-text-col ${isVisible ? 'animate-in' : ''}`} style={{
 
               animation: 'slideInFromLeft 1s ease-out',
 
@@ -890,11 +813,19 @@ const LandingPage = () => {
 
               </div>
 
-             
+              <p className="mb-4" style={{ color: 'rgba(255, 255, 255, 0.75)', fontSize: '0.95rem', fontWeight: 500 }}>
+                SkoolWeb by{' '}
+                <a
+                  href={FUTURISTIC5_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: '#c7d2fe', textDecoration: 'none', fontWeight: 600 }}
+                >
+                  Futuristic5
+                </a>
+              </p>
 
-              <h1 className="display-3 fw-black mb-4" style={{
-
-                fontSize: 'clamp(2.5rem, 5vw, 4.5rem)',
+              <h1 className="display-3 fw-black mb-4 hero-headline" style={{
 
                 lineHeight: 1.1,
 
@@ -940,9 +871,9 @@ const LandingPage = () => {
 
              
 
-              <div className="d-flex flex-wrap gap-3 mb-5">
+              <div className="d-flex flex-wrap gap-3 mb-5 hero-cta-group">
 
-                <Link to="/contact" className="btn btn-pro btn-light btn-lg px-5 py-3 rounded-pill" style={{
+                <a href="#contact" className="btn btn-pro btn-light btn-lg px-5 py-3 rounded-pill hero-cta-btn" style={{
 
                   background: 'white',
 
@@ -964,9 +895,9 @@ const LandingPage = () => {
 
                   Start Free Trial
 
-                </Link>
+                </a>
 
-                <a href="#features" className="btn btn-pro btn-outline-light btn-lg px-5 py-3 rounded-pill" style={{
+                <a href="#features" className="btn btn-pro btn-outline-light btn-lg px-5 py-3 rounded-pill hero-cta-btn" style={{
 
                   borderWidth: '2px',
 
@@ -994,7 +925,7 @@ const LandingPage = () => {
 
               {/* Trust Indicators */}
 
-              <div className="glass-effect rounded-4 p-4" style={{
+              <div className="glass-effect rounded-4 p-4 hero-trust-banner" style={{
 
                 backdropFilter: 'blur(20px)',
 
@@ -1004,51 +935,51 @@ const LandingPage = () => {
 
               }}>
 
-                <div className="row align-items-center">
+                <div className="hero-trust-layout">
 
-                  <div className="col-md-8">
+                  <div className="hero-trust-stat text-center text-md-start">
 
-                    <div className="d-flex flex-wrap gap-4">
+                    <div className="fw-black hero-trust-value" style={{ fontSize: '2rem', color: 'white' }}>{getStat('Active Users')}</div>
 
-                      {[
-
-                        { value: '500+', label: 'Schools Worldwide' },
-
-                        { value: '50K+', label: 'Active Users' },
-
-                        { value: '99.9%', label: 'Uptime Guarantee' }
-
-                      ].map((stat, idx) => (
-
-                        <div key={idx} className="text-center text-md-start">
-
-                          <div className="fw-black" style={{ fontSize: '2rem', color: 'white' }}>{stat.value}</div>
-
-                          <div className="small" style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.9rem' }}>{stat.label}</div>
-
-                        </div>
-
-                      ))}
-
-                    </div>
+                    <div className="small hero-trust-label" style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.9rem' }}>Active Users</div>
 
                   </div>
 
-                  <div className="col-md-4 text-center text-md-end mt-3 mt-md-0">
+                  <div className="hero-trust-stat text-center text-md-start">
 
-                    <div className="d-flex justify-content-center justify-content-md-end mb-2">
+                    <div className="fw-black hero-trust-value" style={{ fontSize: '2rem', color: 'white' }}>{getStat('Uptime Guarantee')}</div>
 
-                      {[...Array(5)].map((_, i) => (
+                    <div className="small hero-trust-label" style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.9rem' }}>Uptime Guarantee</div>
 
-                        <FontAwesomeIcon key={i} icon={faStar} className="text-warning me-1" style={{ fontSize: '18px' }} />
+                  </div>
 
-                      ))}
+                  <div className="hero-trust-bottom-row">
+
+                    <div className="hero-trust-stat text-center text-md-start">
+
+                      <div className="fw-black hero-trust-value" style={{ fontSize: '2rem', color: 'white' }}>{getStat('Total Students')}</div>
+
+                      <div className="small hero-trust-label" style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.9rem' }}>Total Students</div>
 
                     </div>
 
-                    <div className="small" style={{ color: 'rgba(255,255,255,0.9)', fontWeight: '600' }}>
+                    <div className="hero-trust-rating text-center text-md-end">
 
-                      4.9/5 User Rating
+                      <div className="d-flex justify-content-center justify-content-md-end mb-1 hero-trust-stars">
+
+                        {[...Array(5)].map((_, i) => (
+
+                          <FontAwesomeIcon key={i} icon={faStar} className="text-warning me-1" style={{ fontSize: '18px' }} />
+
+                        ))}
+
+                      </div>
+
+                      <div className="small hero-trust-rating-text" style={{ color: 'rgba(255,255,255,0.9)', fontWeight: '600' }}>
+
+                        4.9/5 User Rating
+
+                      </div>
 
                     </div>
 
@@ -1062,7 +993,7 @@ const LandingPage = () => {
 
 
 
-            <div className={`col-lg-6 ${isVisible ? 'animate-in' : ''}`} style={{
+            <div className={`col-12 col-xxl-6 hero-visual-col mt-4 mt-xxl-0 ${isVisible ? 'animate-in' : ''}`} style={{
 
               animation: 'slideInFromRight 1s ease-out',
 
@@ -1072,7 +1003,7 @@ const LandingPage = () => {
 
             }}>
 
-              <div className="position-relative floating-element">
+              <div className="hero-mockup-wrap position-relative floating-element">
 
                 {/* Main Dashboard Mockup */}
 
@@ -1148,13 +1079,13 @@ const LandingPage = () => {
 
                   {/* Dashboard Content */}
 
-                  <div style={{ padding: '30px', background: 'linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%)' }}>
+                  <div className="hero-mockup-body" style={{ padding: '30px', background: 'linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%)' }}>
 
-                    <div className="row g-3 mb-4">
+                    <div className="row g-3 mb-4 hero-mockup-stats-row">
 
                       <div className="col-6">
 
-                        <div className="p-3 rounded-3" style={{
+                        <div className="p-3 rounded-3 hero-mockup-stat-card" style={{
 
                           background: 'white',
 
@@ -1164,9 +1095,9 @@ const LandingPage = () => {
 
                         }}>
 
-                          <div className="d-flex align-items-center">
+                          <div className="d-flex align-items-center hero-mockup-stat-inner">
 
-                            <div style={{
+                            <div className="hero-mockup-stat-icon" style={{
 
                               width: '48px',
 
@@ -1186,7 +1117,9 @@ const LandingPage = () => {
 
                               marginRight: '12px',
 
-                              fontSize: '20px'
+                              fontSize: '20px',
+
+                              flexShrink: 0
 
                             }}>
 
@@ -1194,11 +1127,11 @@ const LandingPage = () => {
 
                             </div>
 
-                            <div>
+                            <div className="hero-mockup-stat-text" style={{ minWidth: 0 }}>
 
-                              <div className="fw-bold" style={{ fontSize: '1.5rem', color: '#1a1a2e' }}>1,247</div>
+                              <div className="fw-bold hero-mockup-stat-value" style={{ fontSize: '1.5rem', color: '#1a1a2e' }}>{getStat('Total Students')}</div>
 
-                              <small className="text-muted">Total Students</small>
+                              <small className="text-muted hero-mockup-stat-label">Total Students</small>
 
                             </div>
 
@@ -1210,7 +1143,7 @@ const LandingPage = () => {
 
                       <div className="col-6">
 
-                        <div className="p-3 rounded-3" style={{
+                        <div className="p-3 rounded-3 hero-mockup-stat-card" style={{
 
                           background: 'white',
 
@@ -1220,9 +1153,9 @@ const LandingPage = () => {
 
                         }}>
 
-                          <div className="d-flex align-items-center">
+                          <div className="d-flex align-items-center hero-mockup-stat-inner">
 
-                            <div style={{
+                            <div className="hero-mockup-stat-icon" style={{
 
                               width: '48px',
 
@@ -1242,7 +1175,9 @@ const LandingPage = () => {
 
                               marginRight: '12px',
 
-                              fontSize: '20px'
+                              fontSize: '20px',
+
+                              flexShrink: 0
 
                             }}>
 
@@ -1250,11 +1185,11 @@ const LandingPage = () => {
 
                             </div>
 
-                            <div>
+                            <div className="hero-mockup-stat-text" style={{ minWidth: 0 }}>
 
-                              <div className="fw-bold" style={{ fontSize: '1.5rem', color: '#1a1a2e' }}>98.5%</div>
+                              <div className="fw-bold hero-mockup-stat-value" style={{ fontSize: '1.5rem', color: '#1a1a2e' }}>{getStat('Attendance Rate')}</div>
 
-                              <small className="text-muted">Attendance Rate</small>
+                              <small className="text-muted hero-mockup-stat-label">Attendance Rate</small>
 
                             </div>
 
@@ -1432,7 +1367,7 @@ const LandingPage = () => {
 
                 color: '#667eea',
 
-                stat: '1,247 Students'
+                statLabel: 'Total Students'
 
               },
 
@@ -1446,7 +1381,7 @@ const LandingPage = () => {
 
                 color: '#764ba2',
 
-                stat: '85 Courses'
+                statLabel: 'Total Subjects'
 
               },
 
@@ -1460,7 +1395,7 @@ const LandingPage = () => {
 
                 color: '#48bb78',
 
-                stat: '98.5% Average'
+                statLabel: 'Attendance Rate'
 
               },
 
@@ -1474,7 +1409,7 @@ const LandingPage = () => {
 
                 color: '#f093fb',
 
-                stat: '50+ Reports'
+                statLabel: 'Total Reports'
 
               },
 
@@ -1548,9 +1483,11 @@ const LandingPage = () => {
 
                     <div>
 
-                      <div className="fw-bold" style={{ fontSize: '1.5rem', color: feature.color }}>{feature.stat}</div>
+                      <div className="fw-bold" style={{ fontSize: '1.5rem', color: feature.color }}>{feature.statLabel ? getStat(feature.statLabel) : feature.stat}</div>
 
-                      <small className="text-muted">Live Data</small>
+                      {feature.statLabel && (
+                        <small className="text-muted">{feature.statLabel}</small>
+                      )}
 
                     </div>
 
@@ -1906,7 +1843,7 @@ const LandingPage = () => {
 
 
 
-                      <Link to="/contact" className={`btn btn-lg w-100 fw-bold rounded-pill ${plan.popular ? 'btn-primary' : 'btn-outline-primary'}`} style={{
+                      <a href="#contact" className={`btn btn-lg w-100 fw-bold rounded-pill ${plan.popular ? 'btn-primary' : 'btn-outline-primary'}`} style={{
 
                         padding: '14px',
 
@@ -1924,7 +1861,7 @@ const LandingPage = () => {
 
                         {plan.label}
 
-                      </Link>
+                      </a>
 
                     </div>
 
@@ -2222,9 +2159,9 @@ const LandingPage = () => {
 
           </p>
 
-          <div className="d-flex flex-wrap gap-3 justify-content-center">
+          <div className="d-flex flex-wrap gap-3 justify-content-center landing-cta-group">
 
-            <Link to="/contact" className="btn btn-pro btn-light btn-lg px-6 py-3 rounded-pill" style={{
+            <a href="#contact" className="btn btn-pro btn-light btn-lg px-6 py-3 rounded-pill landing-cta-btn" style={{
 
               background: 'white',
 
@@ -2246,9 +2183,9 @@ const LandingPage = () => {
 
               Request a Demo
 
-            </Link>
+            </a>
 
-            <a href="#pricing" className="btn btn-pro btn-outline-light btn-lg px-6 py-3 rounded-pill" style={{
+            <a href="#pricing" className="btn btn-pro btn-outline-light btn-lg px-6 py-3 rounded-pill landing-cta-btn" style={{
 
               borderWidth: '2px',
 
@@ -2278,153 +2215,24 @@ const LandingPage = () => {
 
 
 
-      {/* Footer */}
-
-      <footer style={{ background: '#0f172a', color: 'white', paddingTop: '80px', paddingBottom: '40px' }}>
-
+      {/* Contact Section */}
+      <section
+        id="contact"
+        className="py-5"
+        style={{
+          paddingTop: '100px',
+          paddingBottom: '100px',
+          background: 'linear-gradient(135deg, #e9efff 0%, #f8fbff 100%)',
+        }}
+      >
         <div className="container">
-
-          <div className="row mb-5 justify-content-center">
-
-            <div className="col-lg-4 col-md-6 mb-4 text-center text-md-start">
-
-              <div className="d-flex align-items-center mb-4 justify-content-center justify-content-md-start">
-
-                <div style={{
-
-                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-
-                  width: '48px',
-
-                  height: '48px',
-
-                  borderRadius: '14px',
-
-                  display: 'flex',
-
-                  alignItems: 'center',
-
-                  justifyContent: 'center',
-
-                  color: 'white',
-
-                  marginRight: '14px',
-
-                  fontSize: '22px',
-
-                  fontWeight: '900'
-
-                }}>SK</div>
-
-                <h5 className="mb-0 fw-bold" style={{ fontSize: '1.5rem' }}>SKOOLWEB</h5>
-
-              </div>
-
-              <p style={{ color: '#94a3b8', lineHeight: 1.8, fontSize: '1.05rem' }}>
-
-                Transforming education with innovative school management solutions that empower educators, engage parents, and inspire students worldwide.
-
-              </p>
-
-            </div>
-
-
-
-            <div className="col-lg-2 col-md-3 mb-4 text-center text-md-start">
-
-              <h6 className="fw-bold mb-4" style={{ fontSize: '1.1rem' }}>Product</h6>
-
-              <ul className="list-unstyled">
-
-                <li className="mb-3">
-
-                  <a href="#features" style={{ color: '#94a3b8', textDecoration: 'none', transition: 'all 0.3s ease' }}
-
-                    onMouseEnter={(e) => { e.target.style.color = '#667eea'; }}
-
-                    onMouseLeave={(e) => { e.target.style.color = '#94a3b8'; }}
-
-                  >
-
-                    Features
-
-                  </a>
-
-                </li>
-
-                <li className="mb-3">
-
-                  <Link to="/pricing" style={{ color: '#94a3b8', textDecoration: 'none', transition: 'all 0.3s ease' }}
-
-                    onMouseEnter={(e) => { e.target.style.color = '#667eea'; }}
-
-                    onMouseLeave={(e) => { e.target.style.color = '#94a3b8'; }}
-
-                  >
-
-                    Pricing
-
-                  </Link>
-
-                </li>
-
-              </ul>
-
-            </div>
-
-
-
-            <div className="col-lg-2 col-md-3 mb-4 text-center text-md-start">
-
-              <h6 className="fw-bold mb-4" style={{ fontSize: '1.1rem' }}>Company</h6>
-
-              <ul className="list-unstyled">
-
-                <li className="mb-3">
-
-                  <Link to="/contact" style={{ color: '#94a3b8', textDecoration: 'none', transition: 'all 0.3s ease' }}
-
-                    onMouseEnter={(e) => { e.target.style.color = '#667eea'; }}
-
-                    onMouseLeave={(e) => { e.target.style.color = '#94a3b8'; }}
-
-                  >
-
-                    Contact
-
-                  </Link>
-
-                </li>
-
-              </ul>
-
-            </div>
-
-          </div>
-
-
-
-          <hr style={{ borderColor: 'rgba(255,255,255,0.1)', margin: '40px 0' }} />
-
-
-
-          <div className="row align-items-center justify-content-center text-center">
-
-            <div className="col-12">
-
-              <p className="mb-0" style={{ color: '#64748b', fontSize: '0.95rem' }}>
-
-                &copy; 2026 SKOOLWEB. All rights reserved.
-
-              </p>
-
-            </div>
-
-          </div>
-
+          <DemoRequestSection captchaInputId="landing-demo-captcha" headingLevel="h2" />
         </div>
+      </section>
 
-      </footer>
+
+
+      <SiteFooter />
 
     </div>
 

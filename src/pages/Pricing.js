@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import SiteFooter from '../components/SiteFooter';
 
 const Pricing = () => {
   const plans = [
@@ -69,7 +70,8 @@ const Pricing = () => {
   };
 
   return (
-    <div style={{ background: 'linear-gradient(135deg, #eef2ff 0%, #f8fafc 100%)', minHeight: '100vh', paddingBottom: '80px' }}>
+    <div className="d-flex flex-column min-vh-100">
+    <div className="flex-grow-1" style={{ background: 'linear-gradient(135deg, #eef2ff 0%, #f8fafc 100%)', paddingTop: '88px', paddingBottom: '80px' }}>
       <div className="container py-5">
         <div className="text-center mb-5">
           <p className="text-uppercase fw-bold mb-2" style={{ color: '#6366f1', letterSpacing: '0.2em' }}>SKOOLWEB Pricing</p>
@@ -168,6 +170,8 @@ const Pricing = () => {
 
         {/* Removed custom/enterprise CTA per request - only Free and Paid plans shown */}
       </div>
+    </div>
+    <SiteFooter />
     </div>
   );
 };
